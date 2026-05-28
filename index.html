@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>All Stars Super League</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    /* ── Reset & Base ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --gold:       #C9963A;
+      --gold-faint: rgba(201,150,58,.08);
+      --gold-mid:   rgba(201,150,58,.25);
+      --ink:        #0e0e0e;
+      --ink-2:      #3a3a3a;
+      --ink-3:      #7a7a7a;
+      --ink-4:      #b0b0b0;
+      --rule:       #0e0e0e;
+      --rule-thin:  #d8d4ce;
+      --bg:         #f5f2ec;
+      --bg-2:       #eceae4;
+      --bg-card:    #faf8f4;
+      --red:        #b03020;
+      --blue-s:     #1e3a7a;
+      --radius:     6px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--ink);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 15px;
+      line-height: 1.5;
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── Utility ── */
+    .serif   { font-family: 'Playfair Display', serif; }
+    .mono    { font-family: 'DM Mono', monospace; }
+    .kicker  { font-size: 10px; font-weight: 500; letter-spacing: .16em; text-transform: uppercase; color: var(--ink-3); }
+    .rule    { border: none; border-top: 1.5px solid var(--rule); }
+    .thin    { border: none; border-top: .5px solid var(--rule-thin); }
+    .section { padding: 48px 0 36px; border-top: 1.5px solid var(--rule); }
+    .section + .section { margin-top: 0; }
+
+    .pill {
+      display: inline-block; font-size: 10px; font-weight: 500;
+      letter-spacing: .08em; text-transform: uppercase;
+      padding: 3px 10px; border-radius: 2px;
+      border: .5px solid var(--ink-4); color: var(--ink-3);
+    }
+    .live-pill {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 10px; font-weight: 500; letter-spacing: .08em; text-transform: uppercase;
+      padding: 3px 10px; border-radius: 2px;
+      border: .5px solid rgba(176,48,32,.4); color: var(--red); background: rgba(176,48,32,.05);
+    }
+    .live-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--red); animation: blink 1.2s infinite; flex-shrink:0; }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.25} }
+
+    .s-badge {
+      display: inline-block; font-size: 9px; font-weight: 500;
+      letter-spacing: .08em; text-transform: uppercase;
+      padding: 2px 5px; border-radius: 2px;
+      font-family: 'DM Mono', monospace; margin-left: 5px; vertical-align: middle;
+    }
+    .s2425 { background: rgba(30,58,122,.1); color: var(--blue-s); border: .5px solid rgba(30,58,122,.3); }
+    .s2526 { background: rgba(176,48,32,.07); color: var(--red); border: .5px solid rgba(176,48,32,.3); }
+
+    /* ── Layout ── */
+    .page { max-width: 900px; margin: 0 auto; padding: 0 28px 80px; }
+
+    /* ── Nav ── */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(245,242,236,.92); backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--rule-thin);
+    }
+    .nav-inner {
+      max-width: 900px; margin: 0 auto; padding: 0 28px;
+      display: flex; justify-content: space-between; align-items: center;
+      height: 48px;
+    }
+    .nav-brand { font-family: 'Playfair Display', serif; font-weight: 900; font-size: 14px; letter-spacing: -.01em; }
+    .nav-links { display: flex; gap: 24px; }
+    .nav-links a {
+      font-size: 10px; font-weight: 500; letter-spacing: .12em; text-transform: uppercase;
+      color: var(--ink-3); text-decoration: none; transition: color .15s;
+    }
+    .nav-links a:hover { color: var(--ink); }
+    .nav-live { display: flex; align-items: center; gap: 6px; }
+
+    /* ── Masthead ── */
+    .masthead { padding: 60px 0 32px; }
+    .masthead-grid { display: grid; grid-template-columns: 1fr auto; align-items: end; gap: 24px; padding-bottom: 12px; }
+    .masthead-eyebrow { font-size: 10px; font-weight: 500; letter-spacing: .15em; text-transform: uppercase; color: var(--ink-3); margin-bottom: 4px; }
+    .masthead-sub { font-size: 9px; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-4); margin-bottom: 10px; }
+    .masthead h1 { font-family: 'Playfair Display', serif; font-weight: 900; font-size: clamp(36px, 7vw, 58px); line-height: .95; letter-spacing: -.03em; }
+    .masthead-right { text-align: right; }
+    .gold-rule { width: 36px; height: 3px; background: var(--gold); margin-left: auto; margin-bottom: 10px; }
+
+    /* ── Stats Bar ── */
+    .stats-bar { display: grid; grid-template-columns: repeat(4, 1fr); border-bottom: .5px solid var(--rule-thin); }
+    .stat-cell { padding: 18px 0 14px; }
+    .stat-cell + .stat-cell { border-left: .5px solid var(--rule-thin); padding-left: 16px; }
+    .stat-num { font-family: 'Playfair Display', serif; font-weight: 900; font-size: 28px; line-height: 1; }
+    .stat-num.gold { color: var(--gold); font-size: 20px; }
+
+    /* ── Sponsors ── */
+    .sponsor-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; }
+    .sponsor-card {
+      border: .5px solid var(--rule-thin); border-radius: var(--radius);
+      padding: 16px 10px; display: flex; flex-direction: column; align-items: center;
+      text-align: center; gap: 8px; background: var(--bg-card);
+      transition: border-color .2s, transform .2s;
+    }
+    .sponsor-card:hover { border-color: var(--ink-4); transform: translateY(-2px); }
+    .sponsor-logo { width: 46px; height: 46px; border-radius: 8px; display: flex; align-items: center; justify-content: center; }
+    .sponsor-name { font-size: 10px; font-weight: 600; letter-spacing: .02em; line-height: 1.35; }
+    .sponsor-meta { font-size: 9px; color: var(--ink-3); line-height: 1.5; font-family: 'DM Mono', monospace; }
+
+    /* ── Section Header ── */
+    .sh { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 20px; }
+    .sh h2 { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 700; margin-top: 4px; }
+    .section-note { font-size: 12px; color: var(--ink-3); margin-bottom: 18px; }
+
+    /* ── Leaderboard ── */
+    .lb-header {
+      display: grid; grid-template-columns: 36px 38px 1fr repeat(4, 50px) 72px;
+      gap: 0; padding: 0 0 8px; border-bottom: .5px solid var(--rule-thin); margin-bottom: 2px;
+    }
+    .lb-row {
+      display: grid; grid-template-columns: 36px 38px 1fr repeat(4, 50px) 72px;
+      gap: 0; padding: 11px 0; border-bottom: .5px solid var(--rule-thin); align-items: center;
+      transition: background .15s;
+    }
+    .lb-row:hover { background: var(--bg-2); }
+    .lb-row:last-child { border-bottom: none; }
+    .lb-rank { font-family: 'Playfair Display', serif; font-weight: 900; font-size: 24px; line-height: 1; color: var(--ink-4); }
+    .lb-rank.gold { color: var(--gold); font-size: 28px; }
+    .lb-avatar {
+      width: 32px; height: 32px; border-radius: 50%; border: .5px solid var(--rule-thin);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; font-weight: 600; color: var(--ink-3); background: var(--bg-2);
+    }
+    .lb-avatar.gold { background: rgba(201,150,58,.12); border-color: rgba(201,150,58,.5); color: var(--gold); }
+    .lb-name { font-size: 14px; font-weight: 500; }
+    .lb-team { font-size: 10px; color: var(--ink-3); font-family: 'DM Mono', monospace; }
+    .lb-stat { text-align: center; font-family: 'DM Mono', monospace; font-size: 13px; font-weight: 500; }
+    .lb-total { text-align: center; border-left: .5px solid var(--rule-thin); padding-left: 8px; }
+    .lb-total-num { font-family: 'Playfair Display', serif; font-weight: 900; font-size: 22px; line-height: 1; }
+    .lb-total-num.gold { color: var(--gold); }
+    .lb-total-label { font-size: 9px; text-transform: uppercase; letter-spacing: .08em; color: var(--ink-3); }
+
+    /* ── Honour Roll ── */
+    .hof-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
+    .hof-grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+    .hof-card {
+      padding: 16px 16px 16px 20px; border: .5px solid var(--rule-thin); border-radius: var(--radius);
+      position: relative; overflow: hidden; background: var(--bg-card);
+    }
+    .hof-card::before { content: ''; position: absolute; top: 0; left: 0; width: 3px; height: 100%; background: var(--gold); }
+    .hof-season { font-size: 10px; font-weight: 500; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-3); margin-bottom: 6px; }
+    .hof-winner { font-family: 'Playfair Display', serif; font-size: 17px; font-weight: 700; margin-bottom: 3px; }
+    .hof-meta { font-size: 10px; color: var(--ink-3); font-family: 'DM Mono', monospace; }
+
+    /* ── Records ── */
+    .tab-bar { display: flex; border-bottom: 1.5px solid var(--rule); margin-bottom: 20px; }
+    .tab {
+      padding: 8px 18px; font-size: 11px; font-weight: 500; letter-spacing: .1em; text-transform: uppercase;
+      cursor: pointer; color: var(--ink-3); border-bottom: 2.5px solid transparent; margin-bottom: -1.5px;
+      transition: color .15s; background: none; border-top: none; border-left: none; border-right: none;
+      font-family: 'DM Sans', sans-serif;
+    }
+    .tab.active { color: var(--ink); border-bottom-color: var(--ink); }
+    .tab:hover:not(.active) { color: var(--ink); }
+    .rec-panel { display: none; }
+    .rec-panel.active { display: block; }
+    .rec-row { display: flex; justify-content: space-between; align-items: flex-start; padding: 12px 0; border-bottom: .5px solid var(--rule-thin); gap: 12px; }
+    .rec-row:last-child { border-bottom: none; }
+    .rec-title { font-size: 10px; font-weight: 500; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-3); margin-bottom: 3px; }
+    .rec-holder { font-size: 14px; font-weight: 500; }
+    .rec-sub { font-size: 13px; font-weight: 500; margin-top: 3px; }
+    .rec-val { font-family: 'DM Mono', monospace; font-size: 14px; font-weight: 500; text-align: right; white-space: nowrap; }
+    .rec-val-sub { font-family: 'DM Mono', monospace; font-size: 13px; font-weight: 500; text-align: right; white-space: nowrap; margin-top: 3px; }
+
+    /* ── Awards ── */
+    .award-note {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 11px; padding: 5px 12px; border-radius: 2px;
+      background: var(--bg-2); border: .5px solid var(--rule-thin); color: var(--ink-3);
+      margin-bottom: 20px;
+    }
+    .awards-col-header { display: grid; grid-template-columns: 28px 1fr auto; gap: 12px; padding: 0 0 8px; border-bottom: .5px solid var(--rule-thin); }
+    .award-row { display: grid; grid-template-columns: 28px 1fr auto; gap: 12px; align-items: start; padding: 14px 0; border-bottom: .5px solid var(--rule-thin); }
+    .award-row:last-child { border-bottom: none; }
+    .award-idx { font-family: 'Playfair Display', serif; font-weight: 700; font-size: 18px; line-height: 1.1; color: var(--ink-4); }
+    .award-title { font-size: 14px; font-weight: 500; margin-bottom: 2px; }
+    .award-desc { font-size: 11px; color: var(--ink-3); line-height: 1.55; }
+    .award-tba {
+      display: inline-block; font-size: 9px; font-weight: 500; letter-spacing: .12em; text-transform: uppercase;
+      padding: 3px 8px; border-radius: 2px;
+      background: var(--bg-2); color: var(--ink-3); border: .5px solid var(--rule-thin);
+      font-family: 'DM Mono', monospace; white-space: nowrap; margin-top: 2px;
+    }
+
+    /* ── Manager Cards ── */
+    .mgr-card {
+      border: .5px solid var(--rule-thin); border-radius: var(--radius);
+      overflow: hidden; background: var(--bg-card); transition: border-color .2s;
+    }
+    .mgr-card:hover { border-color: var(--ink-4); }
+    .mgr-header { padding: 14px 16px 12px 20px; border-bottom: .5px solid var(--rule-thin); cursor: pointer; }
+    .mgr-accent-bar { /* set via inline style */ }
+    .mgr-title-line { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+    .mgr-role { font-size: 10px; font-weight: 500; letter-spacing: .13em; text-transform: uppercase; margin-bottom: 2px; }
+    .mgr-name { font-size: 16px; font-weight: 600; }
+    .mgr-team { font-size: 12px; font-style: italic; font-family: 'Playfair Display', serif; color: var(--ink-3); margin-left: 6px; }
+    .mgr-subtitle { font-size: 11px; color: var(--ink-3); margin-top: 1px; }
+    .mgr-trophy-num { font-family: 'Playfair Display', serif; font-weight: 900; font-size: 24px; line-height: 1; text-align: right; }
+    .mgr-trophy-label { font-size: 9px; text-transform: uppercase; letter-spacing: .08em; color: var(--ink-3); }
+    .mgr-body { padding: 14px 16px; display: none; border-bottom: .5px solid var(--rule-thin); }
+    .mgr-body.open { display: block; }
+    .mgr-section-label { font-size: 9px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-3); margin-top: 12px; margin-bottom: 4px; }
+    .mgr-section-label:first-child { margin-top: 0; }
+    .mgr-bio { font-size: 12.5px; line-height: 1.65; color: var(--ink-2); }
+    .mgr-foot { padding: 8px 16px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
+    .mgr-tags { display: flex; gap: 4px; flex-wrap: wrap; }
+    .mgr-tag {
+      font-size: 9px; font-weight: 500; letter-spacing: .07em; text-transform: uppercase;
+      padding: 2px 7px; border-radius: 2px;
+      background: var(--bg-2); color: var(--ink-3); border: .5px solid var(--rule-thin);
+    }
+    .mgr-toggle { font-size: 10px; color: var(--ink-3); font-family: 'DM Mono', monospace; white-space: nowrap; }
+    .mgr-detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 12px; }
+
+    /* ── Footer ── */
+    .footer {
+      border-top: 1.5px solid var(--rule); padding: 24px 0 12px;
+      display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;
+    }
+    .footer-brand { font-family: 'Playfair Display', serif; font-size: 14px; font-weight: 700; }
+
+    /* ── Responsive ── */
+    @media (max-width: 680px) {
+      .page { padding: 0 16px 60px; }
+      .sponsor-grid { grid-template-columns: repeat(3, 1fr); }
+      .lb-header, .lb-row { grid-template-columns: 28px 32px 1fr repeat(4, 38px) 56px; font-size: 12px; }
+      .nav-links { display: none; }
+      .hof-grid-3 { grid-template-columns: 1fr 1fr; }
+      .stats-bar { grid-template-columns: repeat(2, 1fr); }
+      .stats-bar .stat-cell:nth-child(odd) { border-left: none; }
+      .stats-bar .stat-cell:nth-child(3), .stats-bar .stat-cell:nth-child(4) { border-top: .5px solid var(--rule-thin); }
+      .mgr-detail-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 460px) {
+      .sponsor-grid { grid-template-columns: repeat(2, 1fr); }
+      .hof-grid-2 { grid-template-columns: 1fr; }
+      .hof-grid-3 { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <div class="nav-inner">
+      <div class="nav-brand">All Stars Super League</div>
+      <div class="nav-links">
+        <a href="#leaderboard">Leaderboard</a>
+        <a href="#honour">Honour Roll</a>
+        <a href="#records">Records</a>
+        <a href="#awards">Awards</a>
+        <a href="#managers">Managers</a>
+      </div>
+      <div class="nav-live">
+        <div class="live-pill"><span class="live-dot"></span>Season 25/26 Live</div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="page">
+
+    <!-- MASTHEAD -->
+    <header class="masthead">
+      <div class="masthead-grid">
+        <div>
+          <div class="masthead-eyebrow">Fantasy Premier League — Official Dashboard</div>
+          <div class="masthead-sub">Formerly: Iraqi All Stars Super League — rebranded after 2024/25</div>
+          <h1>All Stars<br>Super League</h1>
+        </div>
+        <div class="masthead-right">
+          <div class="gold-rule"></div>
+          <div class="live-pill" style="margin-bottom:6px;"><span class="live-dot"></span>Season 25/26 Live</div>
+          <div class="mono" style="font-size:10px;color:var(--ink-3);margin-top:5px;">Records 2024/25 &amp; 2025/26</div>
+        </div>
+      </div>
+      <hr class="rule">
+      <div class="stats-bar">
+        <div class="stat-cell">
+          <div class="serif stat-num">7</div>
+          <div class="kicker" style="margin-top:3px;">Managers</div>
+        </div>
+        <div class="stat-cell">
+          <div class="serif stat-num">2</div>
+          <div class="kicker" style="margin-top:3px;">Seasons tracked</div>
+        </div>
+        <div class="stat-cell">
+          <div class="serif stat-num gold">Hameed</div>
+          <div class="kicker" style="margin-top:4px;">Draft &amp; H2H leader</div>
+        </div>
+        <div class="stat-cell">
+          <div class="serif stat-num gold">5</div>
+          <div class="kicker" style="margin-top:3px;">Titles awarded</div>
+        </div>
+      </div>
+    </header>
+
+    <!-- SPONSORS -->
+    <section class="section" id="sponsors">
+      <div class="sh">
+        <div>
+          <div class="kicker">Official Partners</div>
+          <h2>League Sponsors</h2>
+        </div>
+        <span class="pill">Commercial Tier I</span>
+      </div>
+      <div class="sponsor-grid">
+
+        <!-- Farooj Shmaitilly -->
+        <div class="sponsor-card">
+          <div class="sponsor-logo" style="background:#fff5e6;">
+            <svg width="30" height="30" viewBox="0 0 30 30" fill="none" aria-hidden="true">
+              <path d="M15 4C11 4 8 7 8 10.5C8 14.5 11 17 13 19.5L13 24L17 24L17 19.5C19 17 22 14.5 22 10.5C22 7 19 4 15 4Z" fill="#e8501a" opacity=".9"/>
+              <ellipse cx="15" cy="24.5" rx="3" ry="1.3" fill="#c94010"/>
+              <path d="M11 10.5 Q15 8 19 10.5" stroke="#fff" stroke-width="1.3" stroke-linecap="round" fill="none"/>
+            </svg>
+          </div>
+          <div class="sponsor-name">Farooj Shmaitilly</div>
+          <div class="sponsor-meta">Official Matchday<br>Food Partner<br>🇱🇧 Lebanon</div>
+        </div>
+
+        <!-- UDE -->
+        <div class="sponsor-card">
+          <div class="sponsor-logo" style="background:#e8f0fb;">
+            <svg width="30" height="30" viewBox="0 0 30 30" fill="none" aria-hidden="true">
+              <rect x="4" y="15" width="22" height="11" rx="1" fill="#1a3a8a" opacity=".85"/>
+              <polygon points="15,4 3,15 27,15" fill="#1a3a8a"/>
+              <rect x="12" y="18" width="6" height="8" fill="#e8f0fb"/>
+            </svg>
+          </div>
+          <div class="sponsor-name">Uni. Duisburg-Essen</div>
+          <div class="sponsor-meta">Academic Excellence<br>Partner<br>🇩🇪 Germany</div>
+        </div>
+
+        <!-- Atilim -->
+        <div class="sponsor-card">
+          <div class="sponsor-logo" style="background:#fdf0f0;">
+            <svg width="30" height="30" viewBox="0 0 30 30" fill="none" aria-hidden="true">
+              <circle cx="15" cy="14" r="10" fill="none" stroke="#c0272d" stroke-width="2"/>
+              <path d="M9 14 L15 6 L21 14" stroke="#c0272d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+              <rect x="12" y="17" width="6" height="7" rx=".5" fill="#c0272d" opacity=".7"/>
+            </svg>
+          </div>
+          <div class="sponsor-name">Atilim University</div>
+          <div class="sponsor-meta">Knowledge &amp; Growth<br>Partner<br>🇹🇷 Ankara</div>
+        </div>
+
+        <!-- Erbil -->
+        <div class="sponsor-card">
+          <div class="sponsor-logo" style="background:#edfaf3;">
+            <svg width="30" height="30" viewBox="0 0 30 30" fill="none" aria-hidden="true">
+              <rect x="5" y="5" width="20" height="20" rx="2" fill="#0a7a4b" opacity=".1"/>
+              <rect x="13.5" y="7" width="3" height="16" rx="1.5" fill="#0a7a4b"/>
+              <rect x="7" y="13.5" width="16" height="3" rx="1.5" fill="#0a7a4b"/>
+            </svg>
+          </div>
+          <div class="sponsor-name">Erbil Intl Hospital</div>
+          <div class="sponsor-meta">Official Healthcare<br>Partner<br>🇮🇶 Kurdistan</div>
+        </div>
+
+        <!-- Law School India -->
+        <div class="sponsor-card">
+          <div class="sponsor-logo" style="background:#f5f0fa;">
+            <svg width="30" height="30" viewBox="0 0 30 30" fill="none" aria-hidden="true">
+              <line x1="15" y1="5" x2="15" y2="25" stroke="#5b2d8e" stroke-width="1.8" stroke-linecap="round"/>
+              <line x1="7" y1="11" x2="23" y2="11" stroke="#5b2d8e" stroke-width="1.8" stroke-linecap="round"/>
+              <path d="M7 11 Q5 16 7 20" stroke="#5b2d8e" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+              <path d="M23 11 Q25 16 23 20" stroke="#5b2d8e" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+              <ellipse cx="15" cy="25.5" rx="4.5" ry="1.1" fill="#5b2d8e" opacity=".45"/>
+            </svg>
+          </div>
+          <div class="sponsor-name">Law School India</div>
+          <div class="sponsor-meta">Legal Excellence<br>Partner<br>🇮🇳 India</div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- LEADERBOARD -->
+    <section class="section" id="leaderboard">
+      <div class="sh">
+        <div>
+          <div class="kicker">Section I</div>
+          <h2>Leaderboard Standings</h2>
+        </div>
+        <span class="pill">All Competitions</span>
+      </div>
+
+      <div class="lb-header">
+        <div></div><div></div>
+        <div class="kicker" style="padding-left:10px;">Manager</div>
+        <div class="kicker" style="text-align:center;">H2H</div>
+        <div class="kicker" style="text-align:center;">Cup</div>
+        <div class="kicker" style="text-align:center;">Draft</div>
+        <div class="kicker" style="text-align:center;">Cls</div>
+        <div class="kicker" style="text-align:center;">Total</div>
+      </div>
+      <div id="lb-rows"></div>
+    </section>
+
+    <!-- HONOUR ROLL -->
+    <section class="section" id="honour">
+      <div class="sh">
+        <div>
+          <div class="kicker">Section II</div>
+          <h2>Honour Roll</h2>
+        </div>
+      </div>
+      <div class="hof-grid-2">
+        <div class="hof-card">
+          <div class="hof-season">Draft League — Iraqi All Stars SL 2024/25</div>
+          <div class="serif hof-winner">Akram</div>
+          <div class="hof-meta">Bayer Neverlusen — 1st title</div>
+        </div>
+        <div class="hof-card">
+          <div class="hof-season">Draft League — All Stars SL 2025/26</div>
+          <div class="serif hof-winner">Hameed</div>
+          <div class="hof-meta">Kung Fu Hamoodi — season champion</div>
+        </div>
+      </div>
+      <div class="hof-grid-3">
+        <div class="hof-card">
+          <div class="hof-season">H2H Main — 2025/26</div>
+          <div class="serif hof-winner">Hameed</div>
+          <div class="live-pill" style="margin-top:5px;font-size:9px;"><span class="live-dot"></span>In progress</div>
+        </div>
+        <div class="hof-card">
+          <div class="hof-season">Classic — 2025/26</div>
+          <div class="serif hof-winner">Hameed</div>
+          <div class="live-pill" style="margin-top:5px;font-size:9px;"><span class="live-dot"></span>In progress</div>
+        </div>
+        <div class="hof-card">
+          <div class="hof-season">The Cup — 2025/26</div>
+          <div class="serif hof-winner">Omar</div>
+          <div class="hof-meta">Cup of Classic Stars SL</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- RECORDS -->
+    <section class="section" id="records">
+      <div class="sh">
+        <div>
+          <div class="kicker">Section III</div>
+          <h2>League Records</h2>
+        </div>
+      </div>
+      <p class="section-note">Season 25/26 is live — all records subject to change.</p>
+      <div class="tab-bar">
+        <button class="tab active" onclick="switchTab('draft',this)">Draft League</button>
+        <button class="tab" onclick="switchTab('h2h',this)">H2H Main</button>
+      </div>
+
+      <!-- DRAFT -->
+      <div class="rec-panel active" id="panel-draft">
+        <div class="rec-row">
+          <div style="flex:1;"><div class="rec-title">Highest GW score</div>
+            <div class="rec-holder">Akram <span class="s-badge s2425">24/25</span></div>
+            <div class="rec-sub">Hameed &amp; Karrar (joint) <span class="s-badge s2526">25/26</span></div>
+          </div>
+          <div><div class="rec-val">76 pts</div><div class="rec-val-sub">69 pts</div></div>
+        </div>
+        <div class="rec-row">
+          <div style="flex:1;"><div class="rec-title">Lowest GW score</div>
+            <div class="rec-holder">Zain <span class="s-badge s2425">24/25</span></div>
+            <div class="rec-sub">Nabil <span class="s-badge s2526">25/26</span></div>
+          </div>
+          <div><div class="rec-val">19 pts</div><div class="rec-val-sub">19 pts</div></div>
+        </div>
+        <div class="rec-row">
+          <div style="flex:1;"><div class="rec-title">Most GWs in 1st</div>
+            <div class="rec-holder">Akram <span class="s-badge s2425">24/25</span></div>
+            <div class="rec-sub">Hameed <span class="s-badge s2526">25/26</span></div>
+          </div>
+          <div><div class="rec-val">17 GWs</div><div class="rec-val-sub">35 GWs</div></div>
+        </div>
+        <div class="rec-row">
+          <div style="flex:1;"><div class="rec-title">Top POTW — Regular GW</div>
+            <div class="rec-holder">Cole Palmer via Akram <span class="s-badge s2425">24/25</span></div>
+            <div class="rec-sub">Van de Ven via Zain <span class="s-badge s2526">25/26</span></div>
+          </div>
+          <div><div class="rec-val">25 pts</div><div class="rec-val-sub">23 pts</div></div>
+        </div>
+        <div class="rec-row">
+          <div style="flex:1;"><div class="rec-title">Top POTW — Double GW</div>
+            <div class="rec-holder">Salah via Zain <span class="s-badge s2425">24/25</span></div>
+            <div class="rec-sub">Hameed (honorary) <span class="s-badge s2526">25/26</span></div>
+          </div>
+          <div><div class="rec-val">29 pts</div><div class="rec-val-sub">110 pts</div></div>
+        </div>
+        <div class="rec-row">
+          <div style="flex:1;"><div class="rec-title">Longest win streak</div>
+            <div class="rec-holder">Hameed &amp; Akram (joint) <span class="s-badge s2425">24/25</span></div>
+            <div class="rec-sub">Hameed <span class="s-badge s2526">25/26</span></div>
+          </div>
+          <div><div class="rec-val">7 wins</div><div class="rec-val-sub">12 wins</div></div>
+        </div>
+        <div class="rec-row">
+          <div style="flex:1;"><div class="rec-title">Longest loss streak</div>
+            <div class="rec-holder">Karrar <span class="s-badge s2425">24/25</span></div>
+            <div class="rec-sub">Akram <span class="s-badge s2526">25/26</span></div>
+          </div>
+          <div><div class="rec-val">8 losses</div><div class="rec-val-sub">7 losses</div></div>
+        </div>
+        <div class="rec-row">
+          <div style="flex:1;"><div class="rec-title">Most red cards</div>
+            <div class="rec-holder">Karrar <span class="s-badge s2425">24/25</span></div>
+            <div class="rec-sub">Nabil &amp; Zain (joint) <span class="s-badge s2526">25/26</span></div>
+          </div>
+          <div><div class="rec-val">3 reds</div><div class="rec-val-sub">3 each</div></div>
+        </div>
+      </div>
+
+      <!-- H2H -->
+      <div class="rec-panel" id="panel-h2h">
+        <div class="rec-row"><div style="flex:1;"><div class="rec-title">Most GWs in 1st</div><div class="rec-holder">Hameed</div></div><div class="rec-val">17 GWs</div></div>
+        <div class="rec-row"><div style="flex:1;"><div class="rec-title">Highest GW score</div><div class="rec-holder">Nabil</div></div><div class="rec-val">112 pts</div></div>
+        <div class="rec-row"><div style="flex:1;"><div class="rec-title">Lowest GW score</div><div class="rec-holder">Akram</div></div><div class="rec-val">12 pts</div></div>
+        <div class="rec-row"><div style="flex:1;"><div class="rec-title">Highest POTW</div><div class="rec-holder">Cole Palmer via Akram</div></div><div class="rec-val">20 pts</div></div>
+        <div class="rec-row"><div style="flex:1;"><div class="rec-title">Longest win streak</div><div class="rec-holder">Hameed</div></div><div class="rec-val">9 wins</div></div>
+        <div class="rec-row"><div style="flex:1;"><div class="rec-title">Longest loss streak</div><div class="rec-holder">Nabil</div></div><div class="rec-val">10 losses</div></div>
+        <div class="rec-row"><div style="flex:1;"><div class="rec-title">Most red cards</div><div class="rec-holder">Omar</div></div><div class="rec-val">1 red</div></div>
+      </div>
+    </section>
+
+    <!-- AWARDS -->
+    <section class="section" id="awards">
+      <div class="sh">
+        <div>
+          <div class="kicker">Section IV</div>
+          <h2>Individual Awards</h2>
+        </div>
+        <span class="pill">Annual Prestige</span>
+      </div>
+      <div class="award-note">
+        <svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true"><circle cx="6.5" cy="6.5" r="5.5" stroke="currentColor" stroke-width="1.2"/><line x1="6.5" y1="4.5" x2="6.5" y2="7.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/><circle cx="6.5" cy="9.5" r=".65" fill="currentColor"/></svg>
+        Season 24/25 carried no awards. The prestige programme begins from 25/26 onwards.
+      </div>
+      <div class="awards-col-header">
+        <div></div>
+        <div class="kicker">Award</div>
+        <div class="kicker" style="text-align:right;">25/26</div>
+      </div>
+      <div id="awards-list"></div>
+    </section>
+
+    <!-- MANAGER DOSSIERS -->
+    <section class="section" id="managers">
+      <div class="sh">
+        <div>
+          <div class="kicker">Section V</div>
+          <h2>Manager Dossiers</h2>
+        </div>
+      </div>
+      <p class="section-note">Click any card to expand the full profile.</p>
+      <div id="mgr-grid" style="display:flex;flex-direction:column;gap:10px;"></div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+      <div class="serif footer-brand">All Stars Super League</div>
+      <div class="mono" style="font-size:10px;color:var(--ink-3);">Updated 2025/26 — Season in progress</div>
+    </footer>
+
+  </div><!-- /page -->
+
+  <script>
+    /* ── Data ── */
+    const managers = [
+      {
+        name:'Karrar', team:'Karsel FC', h2h:0, cup:0, draft:0, classic:0,
+        accentColor:'#1a3a8a', title:'The Administrator', subtitle:'Visionary & Founder', fav:'Bruno Fernandes',
+        bio:'The Administrator, moderator and the visionary behind the league\'s establishment and ongoing improvement. It all started with 2 young men, 1 idea, 1 call — and the rest is history. He takes pride in his football knowledge and is a tactician by heart, well versed in the world of football and FPL.',
+        style:'Mixed study of real football, underlying stats, prior knowledge, and current trends.',
+        rivals:['Zain','Nabil','Hameed','Akram'],
+        rivalNote:'Zain (heritage) · Nabil (clash of ideals) · Hameed (family derby) · Akram (pure mutual trolling)'
+      },
+      {
+        name:'Hameed', team:'Kung Fu Hamoodi', h2h:1, cup:0, draft:1, classic:1,
+        accentColor:'#C9963A', title:'The Record Breaker', subtitle:'Youngest entrant', fav:'Tarkowski',
+        bio:'The youngest entrant in All Stars Super League. He started watching football and following FPL just two years ago — young, inexperienced, and humble. But don\'t let that fool you: at record speed, like an AI, he got the hang of it, destroyed every record and won almost everything, proving himself on the world\'s stage. He uses logic mixed with emotional background and love to help others — but don\'t test him for long, as he will wipe the floor with your bum.',
+        style:'Simple forward thinking and judging of future scenarios and past trends with effective use of whatever knowledge he attains from his surroundings, lacking real-football bias.',
+        rivals:['Karrar','Akram','Zain','Omar'],
+        rivalNote:'Karrar (family derby) · Akram (pure FPL hate) · Zain (legacy destruction) · Omar (Uni frenemies, Drake vs Kendrick)'
+      },
+      {
+        name:'Nabil', team:'ChoupoMotingtheGoat', h2h:0, cup:0, draft:0, classic:0,
+        accentColor:'#b03020', title:'The Next Big Thing', subtitle:'Full-time debut 25/26', fav:'Thiago',
+        bio:'Took a trainee programme under Karrar the season prior; Nabil debuted full-time in 25/26. He loves silly gimmicks and hyperfocuses every GW on every single player — detrimental at times, evident by his explosive addiction to transfers. Not shy to ask for help from opposing managers. Has sworn to be the next big thing and talks a lot. Compensates for his lack of self-control with very flexible squad rebuilding. Very inconsistent: very high highs and super low lows — holds the highest pts in Main and most consecutive loss streak, while also posting one of the lowest single-GW tallies in Draft.',
+        style:'Free-for-all squad regeneration, extra focus on past point records, susceptible to recency and past bias.',
+        rivals:['Karrar','Hameed','Akram'],
+        rivalNote:'Karrar (clash of ideals, frenemies) · Hameed (love-hate relationship) · Akram (Bayern derby)'
+      },
+      {
+        name:'Akram', team:'Bayer Neverlusen', h2h:0, cup:0, draft:1, classic:0,
+        accentColor:'#2c7a2c', title:'The Philosopher', subtitle:'Draft champion 24/25', fav:'Sesko',
+        bio:'Known for being very philosophical, at times shooting himself in the foot. Akram has always taken pride in being against the flock — weird selections that, if they work, net him significant bragging rights. Yet most of the time it ends up being his own undoing. He has clear knowledge of real football but fails to translate it to FPL due to infighting with his own philosophical tendencies. One to watch — albeit he sometimes suffers from what philosophers also suffer from: overthinking, stress, and depression from lineups.',
+        style:'Team differentialisation, selecting based on real-life outlook — and sometimes suffering past bias.',
+        rivals:['Karrar','Nabil','Zain','Hameed'],
+        rivalNote:'Karrar (pure football, something to prove) · Nabil (frustration at his decisions) · Zain (family derby) · Hameed (records deletion)'
+      },
+      {
+        name:'Zain', team:'CityZain FC', h2h:0, cup:0, draft:0, classic:0,
+        accentColor:'#5b4ecf', title:'The Veteran', subtitle:'Longest FPL tenure', fav:'Haaland & Salah',
+        bio:'Plays different personas and loves to think he understands everything. Known for his longevity claims and false prophecies about certain FPL aspects. He is the oldest FPL participant in the league, boasting experience — but is yet to prove himself under the All Stars Super League mantra.',
+        style:'Huge devotion to FPL pillars like Salah and Watkins, smart differential choices but bad transfers most of the time, and a very poor reading of the future.',
+        rivals:['Karrar','Akram','Hameed'],
+        rivalNote:'Karrar (long-term friends, FPL heritage) · Akram (family derby) · Hameed (bad losses, Drake vs Kendrick)'
+      },
+      {
+        name:'Omar', team:'CTRL + PEDRI + PASS', h2h:0, cup:1, draft:0, classic:0,
+        accentColor:'#c07830', title:'The Comeback King', subtitle:'Cup winner 25/26', fav:'Szoboszlai',
+        bio:'Boasts about not giving a care, thinking it\'s cool, and promised strong comebacks after a shaky start. It was certainly one of his weakest seasons and the first under All Stars Super League. He has the FPL expertise to be in the top 1% but his decision making has been suffering and he made some blunders that cost him titles. He adores Hameed to the point of copying some of his decisions.',
+        style:'Huge reading of possible future scenarios based on past experiences, strict analysis of point turnover — though he suffers Liverpool bias at times.',
+        rivals:['Hameed'],
+        rivalNote:'Hameed (Drake vs Kendrick, Uni frenemies)'
+      },
+      {
+        name:'Anshal', team:'x3vious', h2h:0, cup:0, draft:0, classic:0,
+        accentColor:'#7a2c8a', title:'The Debutant', subtitle:'Youngest FPL debutant', fav:'Bruno Fernandes',
+        bio:'The youngest debutant in FPL showed a strong, promising half season and is ready to compete all-out. He made sure he stands out with safe team selection coupled with extra weird differential assets. He badmouths everyone he likes — but he has a thing for someone yet to debut.',
+        style:'FPL based on real-life football knowledge and huge reliance on total point history.',
+        rivals:['Daniel'],
+        rivalNote:'Daniel (heritage)'
+      },
+    ];
+
+    const awards = [
+      { title:'Manager of the Season',  desc:'Awarded to the manager with the most outstanding overall campaign across all competitions.' },
+      { title:'One for the Future',      desc:'Recognises the manager showing the most promising development and long-term potential.' },
+      { title:'Transfer of the Season',  desc:'Celebrates the single most impactful or audacious transfer of the year.' },
+      { title:'Best Defense',            desc:'Awarded to the manager who built the most formidable defensive setup across the season.' },
+      { title:'Best Attack',             desc:'Recognises the highest-scoring, most clinical attacking lineup of the campaign.' },
+      { title:'Best Match in Main',      desc:'The most dramatic, memorable H2H Main fixture of the season.' },
+      { title:'Best Match in Draft',     desc:'The most entertaining and clutch Draft League encounter of the year.' },
+      { title:'Best Dramatic Transfer',  desc:'For the transfer that shifted momentum most dramatically — for better or worse.' },
+    ];
+
+    /* ── Leaderboard ── */
+    const sorted = [...managers].sort((a,b) => {
+      const ta = a.h2h+a.cup+a.draft+a.classic, tb = b.h2h+b.cup+b.draft+b.classic;
+      return tb - ta || a.name.localeCompare(b.name);
+    });
+
+    const lbEl = document.getElementById('lb-rows');
+    sorted.forEach((m, i) => {
+      const total = m.h2h + m.cup + m.draft + m.classic;
+      const isFirst = i === 0;
+      const initials = m.name.slice(0,2).toUpperCase();
+      const row = document.createElement('div');
+      row.className = 'lb-row';
+      row.innerHTML = `
+        <div class="lb-rank${isFirst?' gold':''}">${i+1}</div>
+        <div class="lb-avatar${isFirst?' gold':''}">${initials}</div>
+        <div style="padding-left:10px;">
+          <div class="lb-name">${m.name}</div>
+          <div class="lb-team">${m.team}</div>
+        </div>
+        ${[m.h2h,m.cup,m.draft,m.classic].map(v=>`<div class="lb-stat">${v||'—'}</div>`).join('')}
+        <div class="lb-total">
+          <div class="lb-total-num${isFirst?' gold':''}">${total||'—'}</div>
+          <div class="lb-total-label">${total===1?'trophy':total>1?'trophies':'—'}</div>
+        </div>`;
+      lbEl.appendChild(row);
+    });
+
+    /* ── Awards ── */
+    const awardsEl = document.getElementById('awards-list');
+    awards.forEach((a, i) => {
+      const row = document.createElement('div');
+      row.className = 'award-row';
+      row.innerHTML = `
+        <div class="award-idx">${String(i+1).padStart(2,'0')}</div>
+        <div>
+          <div class="award-title">${a.title}</div>
+          <div class="award-desc">${a.desc}</div>
+        </div>
+        <div><span class="award-tba">TBA</span></div>`;
+      awardsEl.appendChild(row);
+    });
+
+    /* ── Manager Cards ── */
+    const grid = document.getElementById('mgr-grid');
+    managers.forEach((m, idx) => {
+      const total = m.h2h + m.cup + m.draft + m.classic;
+      const card = document.createElement('div');
+      card.className = 'mgr-card';
+
+      card.innerHTML = `
+        <div class="mgr-header" style="border-left:3px solid ${m.accentColor};" data-idx="${idx}">
+          <div class="mgr-title-line">
+            <div>
+              <div class="mgr-role" style="color:${m.accentColor};">${m.title}</div>
+              <div><span class="mgr-name">${m.name}</span><span class="mgr-team">${m.team}</span></div>
+              <div class="mgr-subtitle">${m.subtitle}</div>
+            </div>
+            <div>
+              <div class="mgr-trophy-num" style="color:${total>0?m.accentColor:'var(--ink-4)'};">${total||'0'}</div>
+              <div class="mgr-trophy-label">${total===1?'trophy':'trophies'}</div>
+            </div>
+          </div>
+        </div>
+        <div class="mgr-body" id="mgr-body-${idx}">
+          <div class="mgr-section-label">Profile</div>
+          <div class="mgr-bio">${m.bio}</div>
+          <div class="mgr-section-label">Playing Style</div>
+          <div class="mgr-bio">${m.style}</div>
+          <div class="mgr-detail-grid">
+            <div>
+              <div class="mgr-section-label">Favourite Player</div>
+              <div style="font-size:13px;font-weight:500;">${m.fav}</div>
+            </div>
+            <div>
+              <div class="mgr-section-label">Rivalries</div>
+              <div style="font-size:12px;color:var(--ink-3);line-height:1.6;">${m.rivalNote}</div>
+            </div>
+          </div>
+        </div>
+        <div class="mgr-foot" data-idx="${idx}">
+          <div class="mgr-tags">${m.rivals.map(r=>`<span class="mgr-tag">${r}</span>`).join('')}</div>
+          <div class="mgr-toggle" id="mgr-toggle-${idx}">+ expand</div>
+        </div>`;
+
+      /* toggle on header or footer click */
+      const toggle = () => {
+        const body = document.getElementById(`mgr-body-${idx}`);
+        const tog  = document.getElementById(`mgr-toggle-${idx}`);
+        const open = body.classList.contains('open');
+        body.classList.toggle('open', !open);
+        tog.textContent = open ? '+ expand' : '− collapse';
+      };
+      card.querySelector('.mgr-header').addEventListener('click', toggle);
+      card.querySelector('.mgr-foot').addEventListener('click', toggle);
+      grid.appendChild(card);
+    });
+
+    /* ── Tab switcher ── */
+    function switchTab(type, btn) {
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.rec-panel').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('panel-' + type).classList.add('active');
+    }
+  </script>
+</body>
+</html>
