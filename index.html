@@ -85,6 +85,11 @@
       line-height: 1.5;
       opacity: .92;
     }
+    /* Award row toggle */
+    .award-desc-wrap { display: none; margin-top: 6px; }
+    .award-desc-wrap.open { display: block; }
+    .award-toggle { font-size: 10px; color: var(--ink-3); font-family: 'DM Mono', monospace; white-space: nowrap; cursor: pointer; padding: 8px 0 0; display: block; }
+    .award-row { cursor: pointer; }
     /* Award winner chip */
     .award-winner {
       display: inline-flex; align-items: center; gap: 6px;
@@ -785,15 +790,25 @@
         : '';
       row.innerHTML = `
         <div class="award-idx">${String(i+1).padStart(2,'0')}</div>
-        <div>
+        <div style="flex:1;">
           <div class="award-title">${a.title}</div>
-          <div class="award-desc">${a.desc}</div>
-          ${condHtml}
+          <div class="award-desc-wrap" id="award-desc-${i}">
+            <div class="award-desc">${a.desc}</div>
+            ${condHtml}
+          </div>
+          <span class="award-toggle" id="award-toggle-${i}">+ details</span>
         </div>
-        <div style="text-align:right;">
+        <div style="text-align:right;flex-shrink:0;">
           <span class="award-winner">🏅 ${a.winner}</span>
           <span class="award-winner-sub">${a.winnerSub}</span>
         </div>`;
+      row.addEventListener('click', () => {
+        const desc = document.getElementById(`award-desc-${i}`);
+        const tog  = document.getElementById(`award-toggle-${i}`);
+        const open = desc.classList.contains('open');
+        desc.classList.toggle('open', !open);
+        tog.textContent = open ? '+ details' : '− details';
+      });
       awardsEl.appendChild(row);
     });
 
