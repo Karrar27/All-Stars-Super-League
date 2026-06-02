@@ -64,6 +64,43 @@
     }
     .live-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--red); animation: blink 1.2s infinite; flex-shrink:0; }
     @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.25} }
+    .soon-pill {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 10px; font-weight: 500; letter-spacing: .08em; text-transform: uppercase;
+      padding: 3px 10px; border-radius: 2px;
+      border: .5px solid rgba(201,150,58,.45); color: var(--gold); background: rgba(201,150,58,.06);
+    }
+    /* Tagline */
+    .tagline-bar {
+      padding: 18px 0 0;
+      text-align: center;
+    }
+    .tagline-text {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: clamp(13px, 2.2vw, 18px);
+      font-weight: 700;
+      color: var(--gold);
+      letter-spacing: .01em;
+      line-height: 1.5;
+      opacity: .92;
+    }
+    /* Award winner chip */
+    .award-winner {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 11px; font-weight: 600;
+      padding: 4px 10px; border-radius: 2px;
+      background: rgba(201,150,58,.08);
+      border: .5px solid rgba(201,150,58,.35);
+      color: var(--gold);
+      font-family: 'DM Sans', sans-serif;
+      white-space: nowrap; margin-top: 2px;
+    }
+    .award-winner-sub {
+      font-size: 9px; font-weight: 400; color: var(--ink-3);
+      font-family: 'DM Mono', monospace; letter-spacing: .04em;
+      margin-top: 3px; display: block; line-height: 1.5;
+    }
 
     .s-badge {
       display: inline-block; font-size: 9px; font-weight: 500;
@@ -281,7 +318,7 @@
         <a href="#managers">Managers</a>
       </div>
       <div class="nav-live">
-        <div class="live-pill"><span class="live-dot"></span>Season 25/26 Live</div>
+        <div class="soon-pill">26/27 Season Coming Soon</div>
       </div>
     </div>
   </nav>
@@ -298,9 +335,12 @@
         </div>
         <div class="masthead-right">
           <div class="gold-rule"></div>
-          <div class="live-pill" style="margin-bottom:6px;"><span class="live-dot"></span>Season 25/26 Live</div>
+          <div class="soon-pill" style="margin-bottom:6px;">26/27 Season Coming Soon</div>
           <div class="mono" style="font-size:10px;color:var(--ink-3);margin-top:5px;">Records 2024/25 &amp; 2025/26</div>
         </div>
+      </div>
+      <div class="tagline-bar">
+        <div class="tagline-text">"Where football memes originated, trends highlighted,<br>legends were and are being made."</div>
       </div>
       <hr class="rule">
       <div class="stats-bar">
@@ -450,12 +490,12 @@
         <div class="hof-card">
           <div class="hof-season">H2H Main — 2025/26</div>
           <div class="serif hof-winner">Hameed</div>
-          <div class="live-pill" style="margin-top:5px;font-size:9px;"><span class="live-dot"></span>In progress</div>
+          <div class="soon-pill" style="margin-top:5px;font-size:9px;">Season concluded</div>
         </div>
         <div class="hof-card">
           <div class="hof-season">Classic — 2025/26</div>
           <div class="serif hof-winner">Hameed</div>
-          <div class="live-pill" style="margin-top:5px;font-size:9px;"><span class="live-dot"></span>In progress</div>
+          <div class="soon-pill" style="margin-top:5px;font-size:9px;">Season concluded</div>
         </div>
         <div class="hof-card">
           <div class="hof-season">The Cup — 2025/26</div>
@@ -473,7 +513,7 @@
           <h2>League Records</h2>
         </div>
       </div>
-      <p class="section-note">Season 25/26 is live — all records subject to change.</p>
+      <p class="section-note">Season 25/26 concluded. Records locked.</p>
       <div class="tab-bar">
         <button class="tab active" onclick="switchTab('draft',this)">Draft League</button>
         <button class="tab" onclick="switchTab('h2h',this)">H2H Main</button>
@@ -567,7 +607,7 @@
       <div class="awards-col-header">
         <div></div>
         <div class="kicker">Award</div>
-        <div class="kicker" style="text-align:right;">25/26</div>
+        <div class="kicker" style="text-align:right;">25/26 Winner</div>
       </div>
       <div id="awards-list"></div>
     </section>
@@ -587,7 +627,7 @@
     <!-- FOOTER -->
     <footer class="footer">
       <div class="serif footer-brand">All Stars Super League</div>
-      <div class="mono" style="font-size:10px;color:var(--ink-3);">Updated 2025/26 — Season in progress</div>
+      <div class="mono" style="font-size:10px;color:var(--ink-3);">Season 25/26 concluded — 26/27 coming soon</div>
     </footer>
 
   </div><!-- /page -->
@@ -654,14 +694,57 @@
     ];
 
     const awards = [
-      { title:'Manager of the Season',  desc:'Awarded to the manager with the most outstanding overall campaign across all competitions.' },
-      { title:'One for the Future',      desc:'Recognises the manager showing the most promising development and long-term potential.' },
-      { title:'Transfer of the Season',  desc:'Celebrates the single most impactful or audacious transfer of the year.' },
-      { title:'Best Defense',            desc:'Awarded to the manager who built the most formidable defensive setup across the season.' },
-      { title:'Best Attack',             desc:'Recognises the highest-scoring, most clinical attacking lineup of the campaign.' },
-      { title:'Best Match in Main',      desc:'The most dramatic, memorable H2H Main fixture of the season.' },
-      { title:'Best Match in Draft',     desc:'The most entertaining and clutch Draft League encounter of the year.' },
-      { title:'Best Dramatic Transfer',  desc:'For the transfer that shifted momentum most dramatically — for better or worse.' },
+      {
+        title: 'Manager of the Season',
+        desc: 'Awarded to the manager with the most outstanding overall campaign across all competitions.',
+        winner: 'Hameed',
+        winnerSub: 'Kung Fu Hamoodi — dominant across all formats'
+      },
+      {
+        title: 'One for the Future',
+        desc: 'Recognises the manager showing the most promising development and long-term potential.',
+        winner: 'Karrar',
+        winnerSub: 'The Administrator — continuous evolution & vision'
+      },
+      {
+        title: 'Transfer of the Season',
+        desc: 'Celebrates the single most impactful or audacious transfer of the year.',
+        winner: 'Nabil',
+        winnerSub: 'The Thiago pickup — immediately transformed his squad'
+      },
+      {
+        title: 'Best Defense',
+        desc: 'Awarded to the manager who built the most formidable defensive setup across Main & Draft.',
+        winner: 'Hameed',
+        winnerSub: 'Tightest backline across both Main and Draft leagues'
+      },
+      {
+        title: 'Best Attack',
+        desc: 'Recognises the highest-scoring, most clinical attacking lineup across Main & Draft.',
+        winner: 'Hameed',
+        winnerSub: 'Top attacking output across both Main and Draft leagues'
+      },
+      {
+        title: 'Best Match in Main',
+        desc: 'The most dramatic, memorable H2H Main fixture of the season. Award goes to the match winner.',
+        winner: 'Akram',
+        winnerSub: 'Akram 87 – 86 Hameed · Decided by a single point',
+        condition: 'Award to the match winner — Akram edges Hameed in a one-point thriller'
+      },
+      {
+        title: 'Best Match in Draft',
+        desc: 'The most entertaining and clutch Draft League encounter of the year. Award goes to the match winner.',
+        winner: 'Nabil',
+        winnerSub: 'Karrar 38 – 39 Nabil · Last-gasp draft classic',
+        condition: 'Award to the match winner — Nabil steals it from Karrar by one point'
+      },
+      {
+        title: 'Best Dramatic Transfer',
+        desc: 'For the transfer that shifted momentum most dramatically — for better or worse.',
+        winner: 'Hameed',
+        winnerSub: 'Neco Williams in GW31 — the pickup that no one saw coming',
+        condition: 'Hameed brought in Neco Williams in GW31, a move that proved dramatically decisive and earned him this award'
+      },
     ];
 
     /* ── Leaderboard ── */
@@ -697,13 +780,20 @@
     awards.forEach((a, i) => {
       const row = document.createElement('div');
       row.className = 'award-row';
+      const condHtml = a.condition
+        ? `<span class="award-winner-sub" style="color:var(--ink-3);border-left:2px solid var(--gold);padding-left:6px;margin-top:5px;display:block;">⚖ ${a.condition}</span>`
+        : '';
       row.innerHTML = `
         <div class="award-idx">${String(i+1).padStart(2,'0')}</div>
         <div>
           <div class="award-title">${a.title}</div>
           <div class="award-desc">${a.desc}</div>
+          ${condHtml}
         </div>
-        <div><span class="award-tba">TBA</span></div>`;
+        <div style="text-align:right;">
+          <span class="award-winner">🏅 ${a.winner}</span>
+          <span class="award-winner-sub">${a.winnerSub}</span>
+        </div>`;
       awardsEl.appendChild(row);
     });
 
