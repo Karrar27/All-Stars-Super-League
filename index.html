@@ -360,6 +360,55 @@
       .masthead { background-position: center center; }
     }
 
+
+    /* ── Nav Dropdown ── */
+    .nav-menu { position: relative; }
+    .nav-menu-btn {
+      display: flex; align-items: center; gap: 6px;
+      font-size: 10px; font-weight: 500; letter-spacing: .14em; text-transform: uppercase;
+      color: var(--ink); background: none; border: .5px solid var(--rule-thin);
+      border-radius: 2px; padding: 6px 12px; cursor: pointer;
+      font-family: 'DM Sans', sans-serif; transition: border-color .15s, background .15s;
+    }
+    .nav-menu-btn:hover { border-color: var(--ink-4); background: var(--bg-2); }
+    .nav-menu-btn svg { transition: transform .2s ease; }
+    .nav-menu.open .nav-menu-btn svg { transform: rotate(180deg); }
+    .nav-dropdown {
+      position: absolute; top: calc(100% + 8px); right: 0;
+      min-width: 200px;
+      background: var(--bg-card);
+      border: .5px solid var(--rule-thin);
+      border-radius: var(--radius);
+      box-shadow: 0 8px 28px rgba(0,0,0,.10), 0 2px 6px rgba(0,0,0,.06);
+      padding: 6px;
+      opacity: 0; visibility: hidden; transform: translateY(-6px);
+      transition: opacity .18s ease, transform .18s ease, visibility .18s;
+      z-index: 200;
+    }
+    .nav-menu.open .nav-dropdown {
+      opacity: 1; visibility: visible; transform: translateY(0);
+    }
+    .nav-dropdown a {
+      display: flex; align-items: center; justify-content: space-between; gap: 10px;
+      font-size: 12px; font-weight: 500; color: var(--ink-2);
+      text-decoration: none; padding: 9px 12px; border-radius: 4px;
+      transition: background .12s, color .12s;
+    }
+    .nav-dropdown a:hover { background: var(--bg-2); color: var(--ink); }
+    .nav-dropdown a.current { color: var(--ink); font-weight: 600; }
+    .nav-dropdown .nav-dropdown-sep {
+      height: .5px; background: var(--rule-thin); margin: 5px 8px;
+    }
+    .nav-dropdown .nav-dropdown-label {
+      font-size: 9px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase;
+      color: var(--ink-4); padding: 8px 12px 4px;
+    }
+    .nav-dropdown a .tag-new {
+      font-size: 8px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase;
+      color: var(--gold); border: .5px solid rgba(201,150,58,.4); background: rgba(201,150,58,.08);
+      padding: 1px 6px; border-radius: 2px;
+    }
+
   </style>
 </head>
 <body>
@@ -581,8 +630,25 @@
         <a href="#awards">Awards</a>
         <a href="#managers">Managers</a>
       </div>
-      <div class="nav-live">
+      <div class="nav-live" style="gap:10px;">
         <div class="soon-pill">26/27 Season Coming Soon</div>
+      <div class="nav-menu" id="navMenu">
+        <button class="nav-menu-btn" id="navMenuBtn" aria-haspopup="true" aria-expanded="false">
+          Menu
+          <svg width="9" height="6" viewBox="0 0 9 6" fill="none"><path d="M1 1L4.5 5L8 1" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="nav-dropdown" role="menu">
+          <div class="nav-dropdown-label">On This Page</div>
+          <a href="#leaderboard" role="menuitem">Leaderboard</a>
+          <a href="#honour" role="menuitem">Honour Roll</a>
+          <a href="#records" role="menuitem">Records</a>
+          <a href="#awards" role="menuitem">Awards</a>
+          <a href="#managers" role="menuitem">Managers</a>
+          <div class="nav-dropdown-sep"></div>
+          <div class="nav-dropdown-label">More</div>
+          <a href="news.html" role="menuitem">League News <span class="tag-new">New</span></a>
+        </div>
+      </div>
       </div>
     </div>
   </nav>
@@ -1133,6 +1199,30 @@
       btn.classList.add('active');
       document.getElementById('panel-' + type).classList.add('active');
     }
+  </script>
+
+  <script>
+    (function() {
+      var menu = document.getElementById('navMenu');
+      var btn  = document.getElementById('navMenuBtn');
+      if (!menu || !btn) return;
+      function close() { menu.classList.remove('open'); btn.setAttribute('aria-expanded','false'); }
+      function toggle(e) {
+        e.stopPropagation();
+        var isOpen = menu.classList.toggle('open');
+        btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+      }
+      btn.addEventListener('click', toggle);
+      document.addEventListener('click', function(e){
+        if (!menu.contains(e.target)) close();
+      });
+      document.addEventListener('keydown', function(e){
+        if (e.key === 'Escape') close();
+      });
+      menu.querySelectorAll('.nav-dropdown a').forEach(function(a){
+        a.addEventListener('click', close);
+      });
+    })();
   </script>
 </body>
 </html>
