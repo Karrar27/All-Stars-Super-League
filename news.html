@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>News — All Stars Super League</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+
+    /* ── Reset & Base ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --gold:       #C9963A;
+      --gold-faint: rgba(201,150,58,.08);
+      --gold-mid:   rgba(201,150,58,.25);
+      --ink:        #0e0e0e;
+      --ink-2:      #3a3a3a;
+      --ink-3:      #7a7a7a;
+      --ink-4:      #b0b0b0;
+      --rule:       #0e0e0e;
+      --rule-thin:  #d8d4ce;
+      --bg:         #f5f2ec;
+      --bg-2:       #eceae4;
+      --bg-card:    #faf8f4;
+      --red:        #b03020;
+      --blue-s:     #1e3a7a;
+      --radius:     6px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--ink);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 15px;
+      line-height: 1.5;
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── Utility ── */
+    .serif   { font-family: 'Playfair Display', serif; }
+    .mono    { font-family: 'DM Mono', monospace; }
+    .kicker  { font-size: 10px; font-weight: 500; letter-spacing: .16em; text-transform: uppercase; color: var(--ink-3); }
+    .rule    { border: none; border-top: 1.5px solid var(--rule); }
+    .thin    { border: none; border-top: .5px solid var(--rule-thin); }
+    .section { padding: 48px 0 36px; border-top: 1.5px solid var(--rule); }
+    .section + .section { margin-top: 0; }
+
+    .pill {
+      display: inline-block; font-size: 10px; font-weight: 500;
+      letter-spacing: .08em; text-transform: uppercase;
+      padding: 3px 10px; border-radius: 2px;
+      border: .5px solid var(--ink-4); color: var(--ink-3);
+    }
+    .live-pill {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 10px; font-weight: 500; letter-spacing: .08em; text-transform: uppercase;
+      padding: 3px 10px; border-radius: 2px;
+      border: .5px solid rgba(176,48,32,.4); color: var(--red); background: rgba(176,48,32,.05);
+    }
+    .live-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--red); animation: blink 1.2s infinite; flex-shrink:0; }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.25} }
+    .soon-pill {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 10px; font-weight: 500; letter-spacing: .08em; text-transform: uppercase;
+      padding: 3px 10px; border-radius: 2px;
+      border: .5px solid rgba(201,150,58,.45); color: var(--gold); background: rgba(201,150,58,.06);
+    }
+    /* Tagline */
+    .tagline-bar {
+      padding: 18px 0 0;
+      text-align: center;
+    }
+    .tagline-text {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: clamp(13px, 2.2vw, 18px);
+      font-weight: 700;
+      color: var(--gold);
+      letter-spacing: .01em;
+      line-height: 1.5;
+      opacity: .92;
+    }
+    /* Award row toggle */
+    .award-desc-wrap { display: none; margin-top: 6px; }
+    .award-desc-wrap.open { display: block; }
+    .award-toggle { font-size: 10px; color: var(--ink-3); font-family: 'DM Mono', monospace; white-space: nowrap; cursor: pointer; padding: 8px 0 0; display: block; }
+    .award-row { cursor: pointer; }
+    /* Award winner chip */
+    .award-winner {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 11px; font-weight: 600;
+      padding: 4px 10px; border-radius: 2px;
+      background: rgba(201,150,58,.08);
+      border: .5px solid rgba(201,150,58,.35);
+      color: var(--gold);
+      font-family: 'DM Sans', sans-serif;
+      white-space: nowrap; margin-top: 2px;
+    }
+    .award-winner-sub {
+      font-size: 9px; font-weight: 400; color: var(--ink-3);
+      font-family: 'DM Mono', monospace; letter-spacing: .04em;
+      margin-top: 3px; display: block; line-height: 1.5;
+    }
+
+    .s-badge {
+      display: inline-block; font-size: 9px; font-weight: 500;
+      letter-spacing: .08em; text-transform: uppercase;
+      padding: 2px 5px; border-radius: 2px;
+      font-family: 'DM Mono', monospace; margin-left: 5px; vertical-align: middle;
+    }
+    .s2425 { background: rgba(30,58,122,.1); color: var(--blue-s); border: .5px solid rgba(30,58,122,.3); }
+    .s2526 { background: rgba(176,48,32,.07); color: var(--red); border: .5px solid rgba(176,48,32,.3); }
+
+    /* ── Layout ── */
+    .page { max-width: 900px; margin: 0 auto; padding: 0 28px 80px; }
+
+    /* ── Nav ── */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(245,242,236,.92); backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--rule-thin);
+    }
+    .nav-inner {
+      max-width: 900px; margin: 0 auto; padding: 0 28px;
+      display: flex; justify-content: space-between; align-items: center;
+      height: 48px;
+    }
+    .nav-brand { font-family: 'Playfair Display', serif; font-weight: 900; font-size: 14px; letter-spacing: -.01em; }
+    .nav-links { display: flex; gap: 24px; }
+    .nav-links a {
+      font-size: 10px; font-weight: 500; letter-spacing: .12em; text-transform: uppercase;
+      color: var(--ink-3); text-decoration: none; transition: color .15s;
+    }
+    .nav-links a:hover { color: var(--ink); }
+    .nav-live { display: flex; align-items: center; gap: 6px; }
+
+    /* ── Masthead ── */
+    .masthead {
+      padding: 0;
+      position: relative;
+            background-size: cover;
+      background-position: center 30%;
+      background-repeat: no-repeat;
+      isolation: isolate;
+    }
+    .masthead::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(
+          to bottom,
+          rgba(245,242,236,0.82) 0%,
+          rgba(245,242,236,0.78) 60%,
+          rgba(245,242,236,0.92) 100%
+        );
+      z-index: 0;
+    }
+    .masthead > * { position: relative; z-index: 1; }
+    .masthead-grid { display: grid; grid-template-columns: 1fr auto; align-items: end; gap: 24px; padding-bottom: 12px; }
+    .masthead-eyebrow { font-size: 10px; font-weight: 500; letter-spacing: .15em; text-transform: uppercase; color: var(--ink-2); margin-bottom: 4px; text-shadow: 0 1px 3px rgba(245,242,236,.9); }
+    .masthead-sub { font-size: 9px; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-2); margin-bottom: 10px; font-weight: 500; text-shadow: 0 1px 3px rgba(245,242,236,.9), 0 0 8px rgba(245,242,236,1); }
+    .masthead h1 { font-family: 'Playfair Display', serif; font-weight: 900; font-size: clamp(36px, 7vw, 58px); line-height: .95; letter-spacing: -.03em; }
+    .masthead-right { text-align: right; }
+    .gold-rule { width: 36px; height: 3px; background: var(--gold); margin-left: auto; margin-bottom: 10px; }
+
+    /* ── Stats Bar ── */
+    .stats-bar { display: grid; grid-template-columns: repeat(4, 1fr); border-bottom: .5px solid var(--rule-thin); }
+    .stat-cell { padding: 18px 0 14px; }
+    .stat-cell + .stat-cell { border-left: .5px solid var(--rule-thin); padding-left: 16px; }
+    .stat-num { font-family: 'Playfair Display', serif; font-weight: 900; font-size: 28px; line-height: 1; }
+    .stat-num.gold { color: var(--gold); font-size: 20px; }
+
+    /* ── Sponsors ── */
+    .sponsor-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; }
+    .sponsor-card {
+      border: .5px solid var(--rule-thin); border-radius: var(--radius);
+      padding: 16px 10px; display: flex; flex-direction: column; align-items: center;
+      text-align: center; gap: 8px; background: var(--bg-card);
+      transition: border-color .2s, transform .2s;
+    }
+    .sponsor-card:hover { border-color: var(--ink-4); transform: translateY(-2px); }
+    .sponsor-logo { width: 46px; height: 46px; border-radius: 8px; display: flex; align-items: center; justify-content: center; }
+    .sponsor-name { font-size: 10px; font-weight: 600; letter-spacing: .02em; line-height: 1.35; }
+    .sponsor-meta { font-size: 9px; color: var(--ink-3); line-height: 1.5; font-family: 'DM Mono', monospace; }
+
+    /* ── Section Header ── */
+    .sh { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 20px; }
+    .sh h2 { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 700; margin-top: 4px; }
+    .section-note { font-size: 12px; color: var(--ink-3); margin-bottom: 18px; }
+
+    /* ── Leaderboard ── */
+    .lb-header {
+      display: grid; grid-template-columns: 36px 38px 1fr repeat(4, 50px) 72px;
+      gap: 0; padding: 0 0 8px; border-bottom: .5px solid var(--rule-thin); margin-bottom: 2px;
+    }
+    .lb-row {
+      display: grid; grid-template-columns: 36px 38px 1fr repeat(4, 50px) 72px;
+      gap: 0; padding: 11px 0; border-bottom: .5px solid var(--rule-thin); align-items: center;
+      transition: background .15s;
+    }
+    .lb-row:hover { background: var(--bg-2); }
+    .lb-row:last-child { border-bottom: none; }
+    .lb-rank { font-family: 'Playfair Display', serif; font-weight: 900; font-size: 24px; line-height: 1; color: var(--ink-4); }
+    .lb-rank.gold { color: var(--gold); font-size: 28px; }
+    .lb-avatar {
+      width: 32px; height: 32px; border-radius: 50%; border: .5px solid var(--rule-thin);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; font-weight: 600; color: var(--ink-3); background: var(--bg-2);
+    }
+    .lb-avatar.gold { background: rgba(201,150,58,.12); border-color: rgba(201,150,58,.5); color: var(--gold); }
+    .lb-name { font-size: 14px; font-weight: 500; }
+    .lb-team { font-size: 10px; color: var(--ink-3); font-family: 'DM Mono', monospace; }
+    .lb-stat { text-align: center; font-family: 'DM Mono', monospace; font-size: 13px; font-weight: 500; }
+    .lb-total { text-align: center; border-left: .5px solid var(--rule-thin); padding-left: 8px; }
+    .lb-total-num { font-family: 'Playfair Display', serif; font-weight: 900; font-size: 22px; line-height: 1; }
+    .lb-total-num.gold { color: var(--gold); }
+    .lb-total-label { font-size: 9px; text-transform: uppercase; letter-spacing: .08em; color: var(--ink-3); }
+
+    /* ── Honour Roll ── */
+    .hof-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
+    .hof-grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+    .hof-card {
+      padding: 16px 16px 16px 20px; border: .5px solid var(--rule-thin); border-radius: var(--radius);
+      position: relative; overflow: hidden; background: var(--bg-card);
+    }
+    .hof-card::before { content: ''; position: absolute; top: 0; left: 0; width: 3px; height: 100%; background: var(--gold); }
+    .hof-season { font-size: 10px; font-weight: 500; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-3); margin-bottom: 6px; }
+    .hof-winner { font-family: 'Playfair Display', serif; font-size: 17px; font-weight: 700; margin-bottom: 3px; }
+    .hof-meta { font-size: 10px; color: var(--ink-3); font-family: 'DM Mono', monospace; }
+
+    /* ── Records ── */
+    .tab-bar { display: flex; border-bottom: 1.5px solid var(--rule); margin-bottom: 20px; }
+    .tab {
+      padding: 8px 18px; font-size: 11px; font-weight: 500; letter-spacing: .1em; text-transform: uppercase;
+      cursor: pointer; color: var(--ink-3); border-bottom: 2.5px solid transparent; margin-bottom: -1.5px;
+      transition: color .15s; background: none; border-top: none; border-left: none; border-right: none;
+      font-family: 'DM Sans', sans-serif;
+    }
+    .tab.active { color: var(--ink); border-bottom-color: var(--ink); }
+    .tab:hover:not(.active) { color: var(--ink); }
+    .rec-panel { display: none; }
+    .rec-panel.active { display: block; }
+    .rec-row { display: flex; justify-content: space-between; align-items: flex-start; padding: 12px 0; border-bottom: .5px solid var(--rule-thin); gap: 12px; }
+    .rec-row:last-child { border-bottom: none; }
+    .rec-title { font-size: 10px; font-weight: 500; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-3); margin-bottom: 3px; }
+    .rec-holder { font-size: 14px; font-weight: 500; }
+    .rec-sub { font-size: 13px; font-weight: 500; margin-top: 3px; }
+    .rec-val { font-family: 'DM Mono', monospace; font-size: 14px; font-weight: 500; text-align: right; white-space: nowrap; }
+    .rec-val-sub { font-family: 'DM Mono', monospace; font-size: 13px; font-weight: 500; text-align: right; white-space: nowrap; margin-top: 3px; }
+
+    /* ── Awards ── */
+    .award-note {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 11px; padding: 5px 12px; border-radius: 2px;
+      background: var(--bg-2); border: .5px solid var(--rule-thin); color: var(--ink-3);
+      margin-bottom: 20px;
+    }
+    .awards-col-header { display: grid; grid-template-columns: 28px 1fr auto; gap: 12px; padding: 0 0 8px; border-bottom: .5px solid var(--rule-thin); }
+    .award-row { display: grid; grid-template-columns: 28px 1fr auto; gap: 12px; align-items: start; padding: 14px 0; border-bottom: .5px solid var(--rule-thin); }
+    .award-row:last-child { border-bottom: none; }
+    .award-idx { font-family: 'Playfair Display', serif; font-weight: 700; font-size: 18px; line-height: 1.1; color: var(--ink-4); }
+    .award-title { font-size: 14px; font-weight: 500; margin-bottom: 2px; }
+    .award-desc { font-size: 11px; color: var(--ink-3); line-height: 1.55; }
+    .award-tba {
+      display: inline-block; font-size: 9px; font-weight: 500; letter-spacing: .12em; text-transform: uppercase;
+      padding: 3px 8px; border-radius: 2px;
+      background: var(--bg-2); color: var(--ink-3); border: .5px solid var(--rule-thin);
+      font-family: 'DM Mono', monospace; white-space: nowrap; margin-top: 2px;
+    }
+
+    /* ── Manager Cards ── */
+    .mgr-card {
+      border: .5px solid var(--rule-thin); border-radius: var(--radius);
+      overflow: hidden; background: var(--bg-card); transition: border-color .2s;
+    }
+    .mgr-card:hover { border-color: var(--ink-4); }
+    .mgr-header { padding: 14px 16px 12px 20px; border-bottom: .5px solid var(--rule-thin); cursor: pointer; }
+    .mgr-accent-bar { /* set via inline style */ }
+    .mgr-title-line { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+    .mgr-role { font-size: 10px; font-weight: 500; letter-spacing: .13em; text-transform: uppercase; margin-bottom: 2px; }
+    .mgr-name { font-size: 16px; font-weight: 600; }
+    .mgr-team { font-size: 12px; font-style: italic; font-family: 'Playfair Display', serif; color: var(--ink-3); margin-left: 6px; }
+    .mgr-subtitle { font-size: 11px; color: var(--ink-3); margin-top: 1px; }
+    .mgr-trophy-num { font-family: 'Playfair Display', serif; font-weight: 900; font-size: 24px; line-height: 1; text-align: right; }
+    .mgr-trophy-label { font-size: 9px; text-transform: uppercase; letter-spacing: .08em; color: var(--ink-3); }
+    .mgr-body { padding: 14px 16px; display: none; border-bottom: .5px solid var(--rule-thin); }
+    .mgr-body.open { display: block; }
+    .mgr-section-label { font-size: 9px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-3); margin-top: 12px; margin-bottom: 4px; }
+    .mgr-section-label:first-child { margin-top: 0; }
+    .mgr-bio { font-size: 12.5px; line-height: 1.65; color: var(--ink-2); }
+    .mgr-foot { padding: 8px 16px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
+    .mgr-tags { display: flex; gap: 4px; flex-wrap: wrap; }
+    .mgr-tag {
+      font-size: 9px; font-weight: 500; letter-spacing: .07em; text-transform: uppercase;
+      padding: 2px 7px; border-radius: 2px;
+      background: var(--bg-2); color: var(--ink-3); border: .5px solid var(--rule-thin);
+    }
+    .mgr-toggle { font-size: 10px; color: var(--ink-3); font-family: 'DM Mono', monospace; white-space: nowrap; }
+    .mgr-detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 12px; }
+
+    /* ── Footer ── */
+    .footer {
+      border-top: 1.5px solid var(--rule); padding: 24px 0 12px;
+      display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;
+    }
+    .footer-brand { font-family: 'Playfair Display', serif; font-size: 14px; font-weight: 700; }
+
+    /* ── Responsive ── */
+    @media (max-width: 680px) {
+      .page { padding: 0 16px 60px; }
+      .sponsor-grid { grid-template-columns: repeat(3, 1fr); }
+      .lb-header, .lb-row { grid-template-columns: 28px 32px 1fr repeat(4, 38px) 56px; font-size: 12px; }
+      .nav-links { display: none; }
+      .hof-grid-3 { grid-template-columns: 1fr 1fr; }
+      .stats-bar { grid-template-columns: repeat(2, 1fr); }
+      .stats-bar .stat-cell:nth-child(odd) { border-left: none; }
+      .stats-bar .stat-cell:nth-child(3), .stats-bar .stat-cell:nth-child(4) { border-top: .5px solid var(--rule-thin); }
+      .mgr-detail-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 460px) {
+      .sponsor-grid { grid-template-columns: repeat(2, 1fr); }
+      .hof-grid-2 { grid-template-columns: 1fr; }
+      .hof-grid-3 { grid-template-columns: 1fr; }
+    }
+
+    /* ── News page additions ── */
+    .news-masthead { padding: 56px 0 0; }
+    .news-eyebrow { font-size: 10px; font-weight: 500; letter-spacing: .16em; text-transform: uppercase; color: var(--ink-3); margin-bottom: 6px; }
+    .news-masthead h1 { font-family: 'Playfair Display', serif; font-weight: 900; font-size: clamp(34px, 6.5vw, 52px); line-height: .98; letter-spacing: -.03em; margin-bottom: 8px; }
+    .news-dek { font-size: 14px; color: var(--ink-2); max-width: 520px; line-height: 1.6; margin-bottom: 18px; }
+
+    .article {
+      padding: 40px 0;
+      border-top: .5px solid var(--rule-thin);
+    }
+    .article:first-of-type { border-top: 1.5px solid var(--rule); padding-top: 36px; }
+    .article-meta {
+      display: flex; align-items: center; gap: 10px; margin-bottom: 14px; flex-wrap: wrap;
+    }
+    .article-tag {
+      font-size: 9px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase;
+      padding: 3px 9px; border-radius: 2px; color: #fff;
+    }
+    .article-date { font-size: 10px; font-family: 'DM Mono', monospace; color: var(--ink-3); letter-spacing: .04em; }
+    .article h2 {
+      font-family: 'Playfair Display', serif; font-weight: 900;
+      font-size: clamp(22px, 3.6vw, 30px); line-height: 1.15; letter-spacing: -.01em;
+      margin-bottom: 6px;
+    }
+    .article .deck {
+      font-size: 14px; color: var(--ink-3); font-style: italic; font-family: 'Playfair Display', serif;
+      margin-bottom: 18px; line-height: 1.5;
+    }
+    .article-figure {
+      width: 100%; border-radius: var(--radius); overflow: hidden;
+      border: .5px solid var(--rule-thin); margin-bottom: 20px;
+      background: var(--bg-card);
+    }
+    .article-figure svg { display: block; width: 100%; height: auto; }
+    .article-body { font-size: 14px; line-height: 1.85; color: var(--ink-2); }
+    .article-body p { margin-bottom: 14px; }
+    .article-body p:last-child { margin-bottom: 0; }
+    .article-body strong { color: var(--ink); font-weight: 600; }
+    .pullquote {
+      border-left: 3px solid var(--gold);
+      padding: 4px 0 4px 16px;
+      margin: 18px 0;
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: 16px;
+      color: var(--ink);
+      line-height: 1.5;
+    }
+    .pullquote-cite {
+      display: block; margin-top: 6px;
+      font-family: 'DM Mono', monospace; font-style: normal;
+      font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-3);
+    }
+    .stat-strip {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+      gap: 10px; margin: 18px 0;
+    }
+    .stat-chip {
+      border: .5px solid var(--rule-thin); border-radius: var(--radius);
+      padding: 10px 12px; background: var(--bg-card);
+    }
+    .stat-chip .v { font-family: 'Playfair Display', serif; font-weight: 900; font-size: 19px; line-height: 1; color: var(--gold); }
+    .stat-chip .l { font-size: 9px; text-transform: uppercase; letter-spacing: .08em; color: var(--ink-3); margin-top: 4px; }
+
+    @media (max-width: 680px) {
+      .article-meta { gap: 8px; }
+    }
+
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <div class="nav-inner">
+      <div class="nav-brand">All Stars Super League</div>
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="index.html#leaderboard">Leaderboard</a>
+        <a href="index.html#records">Records</a>
+        <a href="index.html#managers">Managers</a>
+        <a href="news.html" style="color:var(--ink);">News</a>
+      </div>
+      <div class="nav-live">
+        <div class="soon-pill">26/27 Season Coming Soon</div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="page">
+
+    <!-- MASTHEAD -->
+    <header class="news-masthead">
+      <div class="news-eyebrow">All Stars Super League — The Wire</div>
+      <h1>League News &amp; Stories</h1>
+      <p class="news-dek">The latest headlines, season recaps, fall-outs and previews from across the All Stars Super League — Draft, Main, Classic and beyond.</p>
+      <hr class="rule">
+    </header>
+
+    <!-- ARTICLE 1 — Ammar -->
+    <article class="article" id="ammar-debut">
+      <div class="article-meta">
+        <span class="article-tag" style="background:var(--blue-s);">Transfers &amp; Arrivals</span>
+        <span class="article-date">26/27 Preview · Pre-Season</span>
+      </div>
+      <h2>The New Face on the Touchline: Ammar Set to Make His All Stars Bow</h2>
+      <p class="deck">A familiar name from outside the league's footballing circles is stepping into the dugout — and both Nabil and Karrar know exactly what's coming.</p>
+
+      <div class="article-figure">
+        <svg viewBox="0 0 600 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Illustration of a silhouetted figure walking through a stadium tunnel toward bright light">
+          <rect width="600" height="300" fill="#faf8f4"/>
+          <!-- Tunnel walls -->
+          <path d="M0 0 L210 0 L300 150 L210 300 L0 300 Z" fill="#0e0e0e" opacity="0.05"/>
+          <path d="M600 0 L390 0 L300 150 L390 300 L600 300 Z" fill="#0e0e0e" opacity="0.05"/>
+          <!-- Tunnel rings -->
+          <g stroke="#C9963A" stroke-width="1.5" fill="none" opacity="0.35">
+            <ellipse cx="300" cy="150" rx="70" ry="110"/>
+            <ellipse cx="300" cy="150" rx="110" ry="150"/>
+            <ellipse cx="300" cy="150" rx="150" ry="190"/>
+          </g>
+          <!-- Light burst -->
+          <circle cx="300" cy="150" r="46" fill="#C9963A" opacity="0.18"/>
+          <circle cx="300" cy="150" r="24" fill="#C9963A" opacity="0.35"/>
+          <!-- Figure -->
+          <g transform="translate(300,150)">
+            <ellipse cx="0" cy="58" rx="22" ry="6" fill="#0e0e0e" opacity="0.12"/>
+            <rect x="-10" y="-4" width="20" height="46" rx="6" fill="#0e0e0e"/>
+            <circle cx="0" cy="-18" r="13" fill="#0e0e0e"/>
+            <rect x="-9" y="6" width="7" height="34" rx="3" fill="#0e0e0e"/>
+            <rect x="2" y="6" width="7" height="34" rx="3" fill="#0e0e0e"/>
+          </g>
+          <!-- jersey number badge -->
+          <g transform="translate(470,55)">
+            <rect x="-26" y="-16" width="52" height="32" rx="4" fill="none" stroke="#C9963A" stroke-width="1.5"/>
+            <text x="0" y="6" font-family="Playfair Display, serif" font-weight="900" font-size="20" fill="#C9963A" text-anchor="middle">NEW</text>
+          </g>
+        </svg>
+      </div>
+
+      <div class="article-body">
+        <p>It's not often that a single pre-season announcement sends a ripple through every corner of the league's group chat — but news of <strong>Ammar's</strong> impending debut in the 26/27 season has done exactly that.</p>
+        <p>Ammar is no stranger to competitive battles, even if his name hasn't yet appeared on an All Stars Super League scoresheet. His history with both <strong>Nabil</strong> and <strong>Karrar</strong> stretches back to ventures well outside football — shared projects, shared rivalries, and by all accounts, more than a few scores still considered unsettled. Those who know him describe a competitor who treats every contest, regardless of the arena, with the same intensity.</p>
+        <p>On the FPL side, Ammar's reputation precedes him. Sources close to the new arrival describe a "decent" track record — the kind of understated phrase that, in this league, usually means someone has quietly been finishing in the top brackets of their previous leagues for years without making much noise about it.</p>
+        <div class="pullquote">
+          "He's calm, he's calculated, and he already knows how Nabil thinks and how Karrar plans. That's not a great combination for either of them."
+          <span class="pullquote-cite">— A source close to the new arrival</span>
+        </div>
+        <p>With the league set to expand for 26/27 (more on that elsewhere in this issue), Ammar's entrance adds another genuine contender to an already crowded field. Karrar, fresh off his own vow to chase silverware next season, and Nabil, still nursing the wounds of a Draft League collapse, may find their first major test of the new campaign arriving from somewhere much closer to home than they expected.</p>
+        <p>The All Stars Super League newsroom will have a full profile on Ammar — including his squad-building philosophy and opening transfers — once pre-season draft activity begins.</p>
+      </div>
+    </article>
+
+    <!-- ARTICLE 2 — Hameed dominance -->
+    <article class="article" id="hameed-dominance">
+      <div class="article-meta">
+        <span class="article-tag" style="background:var(--gold);">Season Review</span>
+        <span class="article-date">25/26 · Final Review</span>
+      </div>
+      <h2>Hameed's Treble Season: Inside a Record-Breaking Campaign</h2>
+      <p class="deck">Three titles, a host of shattered records, and a campaign that will be discussed for years — the numbers behind the most dominant individual season the league has seen.</p>
+
+      <div class="article-figure">
+        <svg viewBox="0 0 600 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Illustration of an ascending bar chart topped with a crown and three trophies">
+          <rect width="600" height="300" fill="#faf8f4"/>
+          <!-- Ground line -->
+          <line x1="0" y1="250" x2="600" y2="250" stroke="#d8d4ce" stroke-width="1"/>
+          <!-- Bars -->
+          <g>
+            <rect x="90"  y="190" width="46" height="60"  fill="#0e0e0e" opacity="0.10"/>
+            <rect x="180" y="150" width="46" height="100" fill="#0e0e0e" opacity="0.16"/>
+            <rect x="270" y="100" width="46" height="150" fill="#0e0e0e" opacity="0.22"/>
+            <rect x="360" y="60"  width="46" height="190" fill="#C9963A" opacity="0.85"/>
+            <rect x="450" y="35"  width="46" height="215" fill="#C9963A"/>
+          </g>
+          <!-- Crown on top bar -->
+          <g transform="translate(473,18)">
+            <path d="M-20 12 L-12 -8 L-4 6 L0 -12 L4 6 L12 -8 L20 12 Z" fill="#C9963A" stroke="#0e0e0e" stroke-width="1.2" stroke-linejoin="round"/>
+          </g>
+          <!-- Trophy row -->
+          <g transform="translate(120,40)" fill="none" stroke="#0e0e0e" stroke-width="1.4">
+            <path d="M-12 0 h24 v6 a12 12 0 0 1 -24 0 Z"/>
+            <path d="M-12 2 a-8 8 0 0 0 -8 8 a8 8 0 0 0 8 6" />
+            <path d="M12 2 a8 8 0 0 1 8 8 a8 8 0 0 1 -8 6" />
+            <rect x="-4" y="14" width="8" height="6"/>
+            <rect x="-10" y="20" width="20" height="4" rx="1"/>
+          </g>
+          <g transform="translate(160,40)" fill="none" stroke="#0e0e0e" stroke-width="1.4">
+            <path d="M-12 0 h24 v6 a12 12 0 0 1 -24 0 Z"/>
+            <path d="M-12 2 a-8 8 0 0 0 -8 8 a8 8 0 0 0 8 6" />
+            <path d="M12 2 a8 8 0 0 1 8 8 a8 8 0 0 1 -8 6" />
+            <rect x="-4" y="14" width="8" height="6"/>
+            <rect x="-10" y="20" width="20" height="4" rx="1"/>
+          </g>
+          <g transform="translate(200,40)" fill="none" stroke="#0e0e0e" stroke-width="1.4">
+            <path d="M-12 0 h24 v6 a12 12 0 0 1 -24 0 Z"/>
+            <path d="M-12 2 a-8 8 0 0 0 -8 8 a8 8 0 0 0 8 6" />
+            <path d="M12 2 a8 8 0 0 1 8 8 a8 8 0 0 1 -8 6" />
+            <rect x="-4" y="14" width="8" height="6"/>
+            <rect x="-10" y="20" width="20" height="4" rx="1"/>
+          </g>
+          <!-- label -->
+          <text x="473" y="280" font-family="DM Mono, monospace" font-size="11" fill="#7a7a7a" text-anchor="middle" letter-spacing="1">HAMEED</text>
+        </svg>
+      </div>
+
+      <div class="article-body">
+        <p>There are good seasons, there are great seasons, and then there is whatever <strong>Hameed</strong> just produced. By the time the curtain fell on 25/26, the youngest manager in the league had claimed the <strong>Draft League title</strong>, the <strong>H2H Main title</strong>, and the <strong>Classic title</strong> — a clean sweep that the All Stars Super League has never seen from a single manager before.</p>
+        <p>The headline number tells its own story: Hameed spent <strong>35 gameweeks in 1st position</strong> across the Draft League this season — more than triple the previous benchmark, and a tally that effectively turned the title race into a formality for most of the campaign.</p>
+        <div class="stat-strip">
+          <div class="stat-chip"><div class="v">35</div><div class="l">GWs in 1st (Draft)</div></div>
+          <div class="stat-chip"><div class="v">12</div><div class="l">Win streak (Draft)</div></div>
+          <div class="stat-chip"><div class="v">17</div><div class="l">GWs in 1st (H2H Main)</div></div>
+          <div class="stat-chip"><div class="v">9</div><div class="l">Win streak (H2H)</div></div>
+          <div class="stat-chip"><div class="v">110</div><div class="l">Double GW POTW pts</div></div>
+          <div class="stat-chip"><div class="v">3</div><div class="l">Titles in one season</div></div>
+        </div>
+        <p>Even the league's record book had to be rewritten in places. The honorary Double Gameweek Points-on-the-Week mark of <strong>110 points</strong> dwarfs anything seen previously, while a <strong>12-match win streak</strong> in the Draft League put real distance between Hameed and the rest of the chasing pack before most rivals had even settled into the season.</p>
+        <p>What makes the campaign feel especially historic is the context: Hameed remains the youngest entrant in the league's history, and just two seasons removed from his introduction to organised FPL. The trajectory from newcomer to treble-winner, inside such a short window, places this season firmly in "legacy" territory — a campaign that future All Stars seasons will likely be measured against.</p>
+        <p>With three trophies added to his cabinet in a single year and the league heading into an expanded 26/27 season, the obvious question is whether anyone can find an answer before Hameed's dominance becomes the new normal.</p>
+      </div>
+    </article>
+
+    <!-- ARTICLE 3 — Karrar speech -->
+    <article class="article" id="karrar-vow">
+      <div class="article-meta">
+        <span class="article-tag" style="background:#1a3a8a;">Awards Night</span>
+        <span class="article-date">25/26 · Awards Ceremony</span>
+      </div>
+      <h2>"One for the Future" — and a Promise for Right Now: Karrar's Awards Night Vow</h2>
+      <p class="deck">The league's founder collected individual hardware for the first time in years — and used the moment to put the rest of the table on notice.</p>
+
+      <div class="article-figure">
+        <svg viewBox="0 0 600 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Illustration of a podium with a spotlight and a microphone, with a medal in the foreground">
+          <rect width="600" height="300" fill="#faf8f4"/>
+          <!-- Spotlight cone -->
+          <path d="M300 0 L210 300 L390 300 Z" fill="#C9963A" opacity="0.10"/>
+          <path d="M300 0 L255 300 L345 300 Z" fill="#C9963A" opacity="0.12"/>
+          <!-- Podium -->
+          <g fill="#0e0e0e" opacity="0.08">
+            <rect x="220" y="200" width="160" height="60"/>
+          </g>
+          <rect x="220" y="200" width="160" height="60" fill="none" stroke="#0e0e0e" stroke-width="1.2"/>
+          <text x="300" y="238" font-family="Playfair Display, serif" font-weight="900" font-size="26" fill="#0e0e0e" text-anchor="middle">25/26</text>
+          <!-- Microphone -->
+          <g transform="translate(420,90)">
+            <rect x="-6" y="-30" width="12" height="40" rx="6" fill="#0e0e0e"/>
+            <rect x="-3" y="10" width="6" height="50" fill="#0e0e0e" opacity="0.4"/>
+            <line x1="-3" y1="60" x2="20" y2="60" stroke="#0e0e0e" stroke-width="2" opacity="0.4"/>
+          </g>
+          <!-- Medal -->
+          <g transform="translate(180,90)">
+            <path d="M0 0 L-16 -40 L16 -40 Z" fill="none" stroke="#C9963A" stroke-width="2"/>
+            <circle cx="0" cy="14" r="26" fill="#C9963A" opacity="0.18" stroke="#C9963A" stroke-width="2"/>
+            <text x="0" y="20" font-family="Playfair Display, serif" font-weight="900" font-size="14" fill="#C9963A" text-anchor="middle">OFTF</text>
+          </g>
+          <!-- Sparkles -->
+          <g fill="#C9963A">
+            <circle cx="120" cy="50" r="2.5"/>
+            <circle cx="500" cy="60" r="2"/>
+            <circle cx="470" cy="180" r="2.5"/>
+            <circle cx="100" cy="200" r="2"/>
+          </g>
+        </svg>
+      </div>
+
+      <div class="article-body">
+        <p>For a man widely regarded as the heart and brain of the All Stars Super League, the trophy cabinet has remained — until now — conspicuously bare. That changed on awards night, when <strong>Karrar</strong> was named the winner of <strong>"One for the Future"</strong>, the award recognising the manager showing the most promising development and long-term potential.</p>
+        <p>It's a notable moment for the league's founder. Karrar built the All Stars Super League from a single phone call between two friends into the multi-competition institution it is today, all while continuing to be — by his own admission — one of the league's most tactically literate managers without the silverware to show for it.</p>
+        <div class="pullquote">
+          "I've helped build the stage for everyone else to win on it. That's been fine — I'm proud of that. But I'm not done chasing my own. Next season, I'm coming for a title. Not 'one for the future' — the real thing."
+          <span class="pullquote-cite">— Karrar, Awards Ceremony Speech, 25/26</span>
+        </div>
+        <p>The acceptance speech, delivered to a room that has watched Karrar narrowly miss out on major honours season after season, struck a tone that was as much a rallying cry as it was a thank-you. He acknowledged the rivalries that have defined his seasons — long-running battles with Zain, Nabil, Hameed and Akram — and framed the year ahead as the one where those rivalries finally tip in his favour.</p>
+        <p>It's worth noting that Karrar's GW76 — the highest single-gameweek score recorded in the 24/25 Draft League season — has long stood as proof of his ceiling. The missing piece, by his own admission, has been turning peak weeks into sustained title challenges.</p>
+        <p>With a new manager arriving in Ammar, an expanded league structure, and Hameed setting the bar at a historic high, Karrar's vow couldn't have come at a more pointed moment. The "One for the Future" award may be the first piece of individual hardware in his cabinet — but after this speech, few in the league will be surprised if it isn't the last.</p>
+      </div>
+    </article>
+
+    <!-- ARTICLE 4 — Next season preview -->
+    <article class="article" id="season-2627-preview">
+      <div class="article-meta">
+        <span class="article-tag" style="background:#2c7a2c;">Season Preview</span>
+        <span class="article-date">26/27 · Looking Ahead</span>
+      </div>
+      <h2>A New Era Dawns: All Stars Super League Gears Up for Its Biggest Season Yet</h2>
+      <p class="deck">More managers, more competitions, and a Premier League landscape entering a new era of its own — 26/27 is shaping up to be the most significant season in the league's history.</p>
+
+      <div class="article-figure">
+        <svg viewBox="0 0 600 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Illustration of a stadium under floodlights with a calendar grid and an upward arrow, surrounded by player silhouettes">
+          <rect width="600" height="300" fill="#faf8f4"/>
+          <!-- Stadium bowl -->
+          <path d="M0 230 Q300 120 600 230 L600 300 L0 300 Z" fill="#0e0e0e" opacity="0.06"/>
+          <path d="M0 230 Q300 120 600 230" fill="none" stroke="#0e0e0e" stroke-width="1.5" opacity="0.25"/>
+          <!-- Floodlights -->
+          <g stroke="#0e0e0e" stroke-width="2" opacity="0.3">
+            <line x1="60" y1="230" x2="60" y2="60"/>
+            <line x1="540" y1="230" x2="540" y2="60"/>
+          </g>
+          <g fill="#C9963A" opacity="0.85">
+            <circle cx="60" cy="55" r="7"/>
+            <circle cx="540" cy="55" r="7"/>
+          </g>
+          <g stroke="#C9963A" stroke-width="1" opacity="0.3">
+            <line x1="60" y1="55" x2="160" y2="140"/>
+            <line x1="60" y1="55" x2="40" y2="160"/>
+            <line x1="540" y1="55" x2="440" y2="140"/>
+            <line x1="540" y1="55" x2="560" y2="160"/>
+          </g>
+          <!-- Calendar grid -->
+          <g transform="translate(220,90)">
+            <rect x="0" y="0" width="160" height="120" rx="4" fill="#faf8f4" stroke="#0e0e0e" stroke-width="1.5"/>
+            <line x1="0" y1="28" x2="160" y2="28" stroke="#0e0e0e" stroke-width="1.5"/>
+            <g stroke="#d8d4ce" stroke-width="1">
+              <line x1="40" y1="28" x2="40" y2="120"/>
+              <line x1="80" y1="28" x2="80" y2="120"/>
+              <line x1="120" y1="28" x2="120" y2="120"/>
+              <line x1="0" y1="58" x2="160" y2="58"/>
+              <line x1="0" y1="88" x2="160" y2="88"/>
+            </g>
+            <text x="80" y="18" font-family="Playfair Display, serif" font-weight="900" font-size="13" fill="#0e0e0e" text-anchor="middle">26/27</text>
+            <circle cx="20" cy="43" r="5" fill="#C9963A" opacity="0.8"/>
+            <circle cx="100" cy="73" r="5" fill="#C9963A" opacity="0.5"/>
+            <circle cx="140" cy="103" r="5" fill="#C9963A" opacity="0.9"/>
+          </g>
+          <!-- Upward arrow -->
+          <g stroke="#0e0e0e" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M430 200 L500 130 L470 130 L470 110"/>
+            <path d="M500 130 L500 150"/>
+          </g>
+          <!-- Player silhouettes -->
+          <g fill="#0e0e0e" opacity="0.7">
+            <g transform="translate(110,210)"><circle cx="0" cy="-22" r="9"/><rect x="-7" y="-12" width="14" height="28" rx="4"/></g>
+            <g transform="translate(140,215)"><circle cx="0" cy="-22" r="9"/><rect x="-7" y="-12" width="14" height="28" rx="4"/></g>
+            <g transform="translate(170,210)"><circle cx="0" cy="-22" r="9"/><rect x="-7" y="-12" width="14" height="28" rx="4"/></g>
+          </g>
+        </svg>
+      </div>
+
+      <div class="article-body">
+        <p>If 25/26 was the season of one manager's historic dominance, early signs suggest 26/27 will be remembered as the season the <strong>All Stars Super League</strong> itself changed shape.</p>
+        <p>League organisers are confident that the upcoming season will see <strong>record participation numbers</strong>, with the confirmed arrival of new manager Ammar already pushing the competitive field to its widest in league history — and further additions reportedly in discussion ahead of the new campaign. More managers means more rivalries, more storylines, and a deeper, more unpredictable table across Draft, H2H Main, Classic and Cup competitions alike.</p>
+        <p>The timing lines up with what's happening at the very top of the football pyramid. The Premier League itself enters a new era in 26/27, and that shift filters directly down into fantasy football — new dynamics, new breakout players, and shifting tactical trends that every manager in this league will need to adapt to in real time.</p>
+        <div class="pullquote">
+          "Every time the Premier League changes, FPL changes with it — and this league has always thrived on that chaos. A new era up top means new surprises down here. Nobody's strategy from last season is safe."
+          <span class="pullquote-cite">— League organiser, pre-season briefing</span>
+        </div>
+        <p>For returning managers, the message is clear: the records, rivalries and reputations built over 24/25 and 25/26 mean little if they can't be defended against a wider, hungrier field. For Hameed, it's a chance to prove last season's treble was the beginning of a dynasty rather than a peak. For Karrar, it's the stage on which he's promised to finally chase a title. For Akram and Nabil, it's an opportunity for redemption after a difficult end to 25/26.</p>
+        <p>One thing is certain — with a bigger league, a changing Premier League landscape, and several open scores still to settle, 26/27 is shaping up to be the most closely watched season the All Stars Super League has ever run.</p>
+      </div>
+    </article>
+
+    <!-- ARTICLE 5 — Akram/Nabil collapse -->
+    <article class="article" id="title-defence-collapse">
+      <div class="article-meta">
+        <span class="article-tag" style="background:var(--red);">Season Review</span>
+        <span class="article-date">25/26 · Final Review</span>
+      </div>
+      <h2>The Great Collapse: Akram's Title Defence Falters, Nabil's Draft Dream Unravels</h2>
+      <p class="deck">One manager couldn't follow up his maiden title. Another led for 22 gameweeks before the wheels came off entirely. A look back at 25/26's biggest disappointments.</p>
+
+      <div class="article-figure">
+        <svg viewBox="0 0 600 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Illustration of a cracked trophy and a line graph that rises then falls sharply">
+          <rect width="600" height="300" fill="#faf8f4"/>
+          <!-- Grid -->
+          <g stroke="#d8d4ce" stroke-width="1">
+            <line x1="40" y1="60" x2="40" y2="250"/>
+            <line x1="40" y1="250" x2="560" y2="250"/>
+          </g>
+          <!-- GW22 marker -->
+          <line x1="330" y1="60" x2="330" y2="250" stroke="#C9963A" stroke-width="1" stroke-dasharray="4 4" opacity="0.6"/>
+          <text x="330" y="270" font-family="DM Mono, monospace" font-size="10" fill="#7a7a7a" text-anchor="middle">GW 22</text>
+          <!-- Rising then falling line -->
+          <polyline points="40,220 120,180 200,140 280,100 330,90 400,150 470,210 560,235"
+                    fill="none" stroke="var(--red)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="330" cy="90" r="5" fill="var(--red)"/>
+          <text x="330" y="76" font-family="DM Sans, sans-serif" font-size="10" fill="#b03020" text-anchor="middle" font-weight="600">Peak: Leading</text>
+          <text x="500" y="226" font-family="DM Sans, sans-serif" font-size="10" fill="#b03020" text-anchor="middle" font-weight="600">Collapse</text>
+          <!-- Cracked trophy -->
+          <g transform="translate(490,90)" fill="none" stroke="#0e0e0e" stroke-width="1.6" opacity="0.55">
+            <path d="M-18 0 h36 v10 a18 18 0 0 1 -36 0 Z"/>
+            <path d="M-18 3 a-12 12 0 0 0 -12 12 a12 12 0 0 0 12 9" />
+            <path d="M18 3 a12 12 0 0 1 12 12 a12 12 0 0 1 -12 9" />
+            <rect x="-6" y="20" width="12" height="10"/>
+            <rect x="-16" y="30" width="32" height="6" rx="1"/>
+          </g>
+          <line x1="478" y1="6" x2="500" y2="34" stroke="var(--red)" stroke-width="2" opacity="0.7"/>
+          <line x1="502" y1="4" x2="486" y2="36" stroke="var(--red)" stroke-width="2" opacity="0.7"/>
+        </svg>
+      </div>
+
+      <div class="article-body">
+        <p>Not every storyline from 25/26 was a celebration. While Hameed swept the board and Karrar earned a place on the podium, two of the league's most established names will look back on the season with frustration — and in one case, genuine heartbreak.</p>
+        <p><strong>Akram</strong>, the reigning Draft League champion from 24/25, came into the season as the man to beat. Instead, his title defence never got going. The same "differential" philosophy that won him his maiden title — bold, against-the-grain selections built on real-world potential — repeatedly backfired, and the season also produced his <strong>longest losing streak of 7 matches</strong>, a sharp contrast to the 24/25 campaign where he shared the league's best win streak. A manager who once turned bold calls into bragging rights instead found those same calls compounding his problems week after week.</p>
+        <p>But if Akram's season was a quiet fade, <strong>Nabil's</strong> was a far louder unravelling. For <strong>22 gameweeks</strong>, Nabil sat at or near the very top of the Draft League table — a remarkable feat for a manager making his full-time debut in the competition. For long stretches of the season, it looked as though the league's newest full-timer was about to claim one of its biggest prizes at the first attempt.</p>
+        <div class="pullquote">
+          "Twenty-two gameweeks at the top is no fluke. What happened after that wasn't bad luck either — it was a season-defining collapse, and everyone in the league chat watched it happen in real time."
+          <span class="pullquote-cite">— League observer, end-of-season review</span>
+        </div>
+        <p>What followed was one of the most dramatic reversals the Draft League has produced. Nabil's season is now home to two unwanted records: the <strong>lowest single-gameweek score</strong> of the campaign (19 points) and the <strong>longest losing streak in H2H Main</strong> (10 matches) — a stark illustration of just how completely his form deserted him after gameweek 22. The same hyper-reactive, transfer-heavy approach that built his early lead seemingly became his undoing once results turned, with rebuilds compounding rather than correcting the slide.</p>
+        <p>By the time the dust settled, Hameed had swept past both of them on the way to a historic treble, leaving Akram to defend a title he never looked like keeping and Nabil to reflect on 22 gameweeks of promise undone by a collapse few saw coming. For both managers, 26/27 — with its expanded field and new arrivals — represents not just a fresh start, but a chance to answer the only question that matters: was 25/26 a blip, or a pattern?</p>
+      </div>
+    </article>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+      <div class="serif footer-brand">All Stars Super League</div>
+      <div class="mono" style="font-size:10px;color:var(--ink-3);">The Wire — Season 25/26 Review &amp; 26/27 Preview</div>
+    </footer>
+
+  </div><!-- /page -->
+
+</body>
+</html>
