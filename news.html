@@ -451,6 +451,314 @@
 </head>
 <body>
 
+  <!-- ── NEWS INTRO SPLASH ── -->
+  <div id="newsSplash" aria-hidden="true">
+    <div class="ns-bg-flash"></div>
+
+    <!-- Sweeping diagonal bars -->
+    <div class="ns-bar ns-bar-1"></div>
+    <div class="ns-bar ns-bar-2"></div>
+    <div class="ns-bar ns-bar-3"></div>
+    <div class="ns-bar ns-bar-4"></div>
+
+    <!-- Light sweep -->
+    <div class="ns-sweep"></div>
+
+    <!-- Center content -->
+    <div class="ns-center">
+      <div class="ns-kicker">All Stars Super League Presents</div>
+      <div class="ns-title">
+        <span class="ns-title-line ns-title-1">THE</span>
+        <span class="ns-title-line ns-title-2">WIRE</span>
+      </div>
+      <div class="ns-subtitle">League News &amp; Stories</div>
+    </div>
+
+    <!-- Bottom ticker -->
+    <div class="ns-ticker">
+      <div class="ns-ticker-track">
+        <span>HAMEED'S HISTORIC TREBLE</span><span class="ns-dot">●</span>
+        <span>AMMAR SET TO DEBUT 26/27</span><span class="ns-dot">●</span>
+        <span>KARRAR'S TITLE VOW</span><span class="ns-dot">●</span>
+        <span>26/27 SEASON PREVIEW</span><span class="ns-dot">●</span>
+        <span>AKRAM &amp; NABIL'S COLLAPSE</span><span class="ns-dot">●</span>
+        <span>OMAR BOWS OUT A CHAMPION</span><span class="ns-dot">●</span>
+      </div>
+    </div>
+
+    <div class="ns-skip">tap to skip</div>
+  </div>
+
+  <style>
+    /* ── News Intro Splash ── */
+    #newsSplash {
+      position: fixed; inset: 0; z-index: 9999;
+      background: #050505;
+      overflow: hidden;
+      cursor: pointer;
+      animation: nsFadeOut 0.6s ease-in-out 3.4s forwards;
+    }
+    #newsSplash.gone { display: none; }
+    @keyframes nsFadeOut {
+      0%   { opacity: 1; pointer-events: all; }
+      100% { opacity: 0; pointer-events: none; }
+    }
+
+    .ns-bg-flash {
+      position: absolute; inset: 0;
+      background: radial-gradient(circle at 50% 50%, rgba(192,57,32,.35), transparent 60%);
+      opacity: 0;
+      animation: nsFlash 0.5s ease-out 0.85s forwards;
+    }
+    @keyframes nsFlash {
+      0% { opacity: 0; }
+      30% { opacity: 1; }
+      100% { opacity: 0; }
+    }
+
+    /* Diagonal sweeping bars */
+    .ns-bar {
+      position: absolute;
+      top: -10%; height: 120%;
+      width: 26%;
+      transform: skewX(-12deg) translateX(-160%);
+      opacity: 0;
+    }
+    .ns-bar-1 { left: 0%;   background: #c0392b; animation: nsBarIn 0.7s cubic-bezier(.16,1,.3,1) 0.05s forwards; }
+    .ns-bar-2 { left: 22%;  background: #0e0e0e; animation: nsBarIn 0.7s cubic-bezier(.16,1,.3,1) 0.12s forwards; }
+    .ns-bar-3 { left: 78%;  background: #C9963A; animation: nsBarInRev 0.7s cubic-bezier(.16,1,.3,1) 0.05s forwards; }
+    .ns-bar-4 { left: 56%;  background: #0e0e0e; animation: nsBarInRev 0.7s cubic-bezier(.16,1,.3,1) 0.12s forwards; }
+    @keyframes nsBarIn {
+      0%   { transform: skewX(-12deg) translateX(-160%); opacity: 1; }
+      55%  { transform: skewX(-12deg) translateX(0%); opacity: 1; }
+      80%  { transform: skewX(-12deg) translateX(0%); opacity: 1; }
+      100% { transform: skewX(-12deg) translateX(220%); opacity: 1; }
+    }
+    @keyframes nsBarInRev {
+      0%   { transform: skewX(-12deg) translateX(160%); opacity: 1; }
+      55%  { transform: skewX(-12deg) translateX(0%); opacity: 1; }
+      80%  { transform: skewX(-12deg) translateX(0%); opacity: 1; }
+      100% { transform: skewX(-12deg) translateX(-220%); opacity: 1; }
+    }
+
+    /* Light sweep across the whole screen */
+    .ns-sweep {
+      position: absolute; top: 0; left: -60%; width: 40%; height: 100%;
+      background: linear-gradient(105deg, transparent 0%, rgba(255,255,255,.18) 45%, transparent 100%);
+      transform: skewX(-12deg);
+      animation: nsSweep 1s ease-in-out 0.95s forwards;
+      opacity: 0;
+    }
+    @keyframes nsSweep {
+      0%   { left: -60%; opacity: 0; }
+      10%  { opacity: 1; }
+      90%  { opacity: 1; }
+      100% { left: 130%; opacity: 0; }
+    }
+
+    /* Center content */
+    .ns-center {
+      position: absolute; inset: 0;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      text-align: center;
+      opacity: 0;
+      animation: nsCenterIn 0.4s ease-out 0.75s forwards;
+    }
+    @keyframes nsCenterIn { to { opacity: 1; } }
+
+    .ns-kicker {
+      font-family: 'DM Mono', monospace;
+      font-size: 11px; font-weight: 500; letter-spacing: .3em; text-transform: uppercase;
+      color: #C9963A; margin-bottom: 14px;
+      opacity: 0;
+      animation: nsFadeUp 0.5s ease-out 1.5s forwards;
+    }
+    .ns-title {
+      display: flex; gap: 18px; line-height: 1;
+    }
+    .ns-title-line {
+      font-family: 'Playfair Display', serif; font-weight: 900;
+      font-size: clamp(56px, 14vw, 130px);
+      color: #fff;
+      letter-spacing: -.02em;
+      display: inline-block;
+      transform: scale(2.6);
+      opacity: 0;
+      text-shadow: 0 0 40px rgba(192,57,32,.5);
+    }
+    .ns-title-1 { animation: nsTitleSmash 0.55s cubic-bezier(.16,1,.3,1) 0.78s forwards; }
+    .ns-title-2 { color: #c0392b; animation: nsTitleSmash 0.55s cubic-bezier(.16,1,.3,1) 0.88s forwards; }
+    @keyframes nsTitleSmash {
+      0%   { transform: scale(2.6); opacity: 0; filter: blur(8px); }
+      60%  { transform: scale(0.94); opacity: 1; filter: blur(0px); }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    .ns-subtitle {
+      margin-top: 16px;
+      font-family: 'DM Sans', sans-serif; font-weight: 500;
+      font-size: clamp(12px, 2.5vw, 16px);
+      letter-spacing: .12em; text-transform: uppercase;
+      color: #d8d4ce;
+      opacity: 0;
+      animation: nsFadeUp 0.5s ease-out 1.45s forwards;
+    }
+    @keyframes nsFadeUp {
+      0%   { opacity: 0; transform: translateY(10px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Bottom ticker */
+    .ns-ticker {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      height: 38px;
+      background: #c0392b;
+      overflow: hidden;
+      opacity: 0;
+      animation: nsFadeUp 0.4s ease-out 1.9s forwards;
+    }
+    .ns-ticker-track {
+      position: absolute; white-space: nowrap;
+      display: flex; align-items: center; gap: 22px;
+      height: 100%;
+      font-family: 'DM Mono', monospace; font-weight: 500;
+      font-size: 11px; letter-spacing: .15em; color: #fff;
+      padding-left: 100%;
+      animation: nsTickerScroll 9s linear 2.1s infinite;
+    }
+    .ns-dot { color: rgba(255,255,255,.5); font-size: 8px; }
+    @keyframes nsTickerScroll {
+      0%   { transform: translateX(0); }
+      100% { transform: translateX(-100%); }
+    }
+
+    .ns-skip {
+      position: absolute; top: 16px; right: 16px;
+      font-size: 9px; letter-spacing: .14em; text-transform: uppercase;
+      color: rgba(255,255,255,.3); font-family: 'DM Mono', monospace;
+      animation: nsBlinkSlow 1.5s ease-in-out infinite;
+    }
+    @keyframes nsBlinkSlow { 0%,100%{opacity:.3} 50%{opacity:.65} }
+
+    @media (max-width: 520px) {
+      .ns-title { gap: 10px; }
+      .ns-ticker { height: 30px; }
+      .ns-ticker-track { font-size: 9px; }
+    }
+  </style>
+
+  <script>
+    (function() {
+      var splash = document.getElementById('newsSplash');
+
+      /* ── Synthesized news sting (Web Audio API, no external files) ── */
+      function playNewsSting() {
+        try {
+          var Ctx = window.AudioContext || window.webkitAudioContext;
+          var ctx = new Ctx();
+          var now = ctx.currentTime;
+          var master = ctx.createGain();
+          master.gain.value = 0.18;
+          master.connect(ctx.destination);
+
+          // Whoosh: filtered noise sweep, timed with the bar sweep (~0.05–0.8s)
+          var bufferSize = ctx.sampleRate * 0.9;
+          var buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+          var data = buffer.getChannelData(0);
+          for (var i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
+          var noise = ctx.createBufferSource();
+          noise.buffer = buffer;
+          var noiseFilter = ctx.createBiquadFilter();
+          noiseFilter.type = 'bandpass';
+          noiseFilter.frequency.setValueAtTime(300, now);
+          noiseFilter.frequency.exponentialRampToValueAtTime(4000, now + 0.55);
+          noiseFilter.frequency.exponentialRampToValueAtTime(200, now + 0.85);
+          var noiseGain = ctx.createGain();
+          noiseGain.gain.setValueAtTime(0.0001, now);
+          noiseGain.gain.exponentialRampToValueAtTime(0.5, now + 0.15);
+          noiseGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.85);
+          noise.connect(noiseFilter); noiseFilter.connect(noiseGain); noiseGain.connect(master);
+          noise.start(now);
+          noise.stop(now + 0.9);
+
+          // Brass-style stab chord at the title smash (~0.78s)
+          var stabTime = now + 0.78;
+          [220, 277.18, 329.63, 440].forEach(function(freq, idx) {
+            var osc = ctx.createOscillator();
+            osc.type = 'sawtooth';
+            osc.frequency.value = freq;
+            var g = ctx.createGain();
+            g.gain.setValueAtTime(0.0001, stabTime);
+            g.gain.exponentialRampToValueAtTime(0.22, stabTime + 0.02);
+            g.gain.exponentialRampToValueAtTime(0.0001, stabTime + 0.7);
+            var filt = ctx.createBiquadFilter();
+            filt.type = 'lowpass';
+            filt.frequency.value = 1800;
+            osc.connect(filt); filt.connect(g); g.connect(master);
+            osc.start(stabTime);
+            osc.stop(stabTime + 0.75);
+          });
+
+          // Sub hit
+          var sub = ctx.createOscillator();
+          sub.type = 'sine';
+          sub.frequency.setValueAtTime(110, stabTime);
+          sub.frequency.exponentialRampToValueAtTime(50, stabTime + 0.4);
+          var subGain = ctx.createGain();
+          subGain.gain.setValueAtTime(0.0001, stabTime);
+          subGain.gain.exponentialRampToValueAtTime(0.35, stabTime + 0.02);
+          subGain.gain.exponentialRampToValueAtTime(0.0001, stabTime + 0.5);
+          sub.connect(subGain); subGain.connect(master);
+          sub.start(stabTime);
+          sub.stop(stabTime + 0.5);
+
+          // Ticking rhythm under the ticker (~2.0s–3.2s)
+          for (var t = 0; t < 5; t++) {
+            var tickTime = now + 2.0 + t * 0.26;
+            var tick = ctx.createOscillator();
+            tick.type = 'square';
+            tick.frequency.value = 1200;
+            var tickGain = ctx.createGain();
+            tickGain.gain.setValueAtTime(0.0001, tickTime);
+            tickGain.gain.exponentialRampToValueAtTime(0.05, tickTime + 0.005);
+            tickGain.gain.exponentialRampToValueAtTime(0.0001, tickTime + 0.06);
+            tick.connect(tickGain); tickGain.connect(master);
+            tick.start(tickTime);
+            tick.stop(tickTime + 0.07);
+          }
+
+          setTimeout(function(){ ctx.close(); }, 4000);
+          return ctx;
+        } catch (e) { return null; }
+      }
+
+      var audioCtx = playNewsSting();
+
+      // If autoplay was blocked, resume on first user interaction (best-effort)
+      function unlockAudio() {
+        if (audioCtx && audioCtx.state === 'suspended') {
+          audioCtx.resume();
+        } else if (!audioCtx) {
+          audioCtx = playNewsSting();
+        }
+        document.removeEventListener('click', unlockAudio);
+        document.removeEventListener('touchstart', unlockAudio);
+      }
+      document.addEventListener('click', unlockAudio, { once: true });
+      document.addEventListener('touchstart', unlockAudio, { once: true, passive: true });
+
+      function dismiss() {
+        splash.style.animation = 'none';
+        splash.style.opacity = '0';
+        splash.style.transition = 'opacity 0.35s ease';
+        setTimeout(function(){ splash.classList.add('gone'); }, 360);
+      }
+      setTimeout(function(){ splash.classList.add('gone'); }, 4100);
+      splash.addEventListener('click', dismiss);
+      splash.addEventListener('touchstart', dismiss, { passive: true });
+    })();
+  </script>
+
+
   <!-- NAV -->
   <nav>
     <div class="nav-inner">
