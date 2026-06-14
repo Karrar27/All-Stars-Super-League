@@ -178,7 +178,7 @@
     .stat-num.gold { color: var(--gold); font-size: 20px; }
 
     /* ── Sponsors ── */
-    .sponsor-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; }
+    .sponsor-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
     .sponsor-card {
       border: .5px solid var(--rule-thin); border-radius: var(--radius);
       padding: 16px 10px; display: flex; flex-direction: column; align-items: center;
@@ -186,6 +186,59 @@
       transition: border-color .2s, transform .2s;
     }
     .sponsor-card:hover { border-color: var(--ink-4); transform: translateY(-2px); }
+    .sponsor-card.clickable { cursor: pointer; -webkit-tap-highlight-color: transparent; user-select: none; }
+    .sponsor-card.clickable:active { transform: translateY(-1px) scale(.98); }
+
+    /* ── Sponsor click effects ── */
+    .fx-layer {
+      position: fixed; inset: 0; pointer-events: none; z-index: 9000; overflow: hidden;
+    }
+    .fx-item {
+      position: absolute; font-size: 34px; line-height: 1;
+      will-change: transform, opacity;
+      animation: fxFly var(--fx-dur,1.1s) cubic-bezier(.22,.61,.36,1) forwards;
+      filter: drop-shadow(0 4px 8px rgba(0,0,0,.18));
+    }
+    @keyframes fxFly {
+      0%   { transform: translate(0,0) rotate(0deg) scale(.4); opacity: 0; }
+      12%  { opacity: 1; }
+      60%  { transform: translate(var(--fx-x,0px), var(--fx-y,-120px)) rotate(var(--fx-rot,180deg)) scale(1); opacity: 1; }
+      100% { transform: translate(var(--fx-x2,0px), var(--fx-y2,260px)) rotate(var(--fx-rot2,400deg)) scale(.85); opacity: 0; }
+    }
+    .fx-gavel {
+      position: fixed; top: -200px; left: 50%; transform: translateX(-50%) rotate(-18deg);
+      font-size: 120px; z-index: 9100; pointer-events: none;
+      animation: fxGavelDrop 0.85s cubic-bezier(.36,0,.66,-0.1) forwards;
+      filter: drop-shadow(0 12px 24px rgba(0,0,0,.35));
+    }
+    @keyframes fxGavelDrop {
+      0%   { top: -220px; transform: translateX(-50%) rotate(-18deg) scale(1); opacity: 1; }
+      55%  { top: -220px; transform: translateX(-50%) rotate(-18deg) scale(1); opacity: 1; }
+      72%  { top: 38vh; transform: translateX(-50%) rotate(8deg) scale(1.05); opacity: 1; }
+      80%  { top: 40vh; transform: translateX(-50%) rotate(0deg) scale(1.15); opacity: 1; }
+      100% { top: 40vh; transform: translateX(-50%) rotate(0deg) scale(1.15); opacity: 0; }
+    }
+    .fx-crack {
+      position: fixed; left: 50%; top: 40vh; transform: translate(-50%,-50%);
+      font-size: 20px; font-weight: 800; letter-spacing: .15em; color: var(--ink);
+      font-family: 'Playfair Display', serif; text-transform: uppercase;
+      z-index: 9100; pointer-events: none; opacity: 0;
+      animation: fxCrackPop 0.6s ease-out forwards;
+      animation-delay: 0.55s;
+    }
+    @keyframes fxCrackPop {
+      0%   { opacity: 0; transform: translate(-50%,-50%) scale(.3); }
+      40%  { opacity: 1; transform: translate(-50%,-50%) scale(1.3); }
+      100% { opacity: 0; transform: translate(-50%,-50%) scale(1.05); }
+    }
+    @keyframes fxShake {
+      0%, 100% { transform: translate(0,0); }
+      20% { transform: translate(-6px,2px); }
+      40% { transform: translate(6px,-2px); }
+      60% { transform: translate(-4px,1px); }
+      80% { transform: translate(4px,-1px); }
+    }
+    body.fx-shaking { animation: fxShake 0.4s ease-in-out; animation-delay: 0.62s; }
     .sponsor-logo { width: 46px; height: 46px; border-radius: 8px; display: flex; align-items: center; justify-content: center; }
     .sponsor-name { font-size: 10px; font-weight: 600; letter-spacing: .02em; line-height: 1.35; }
     .sponsor-meta { font-size: 9px; color: var(--ink-3); line-height: 1.5; font-family: 'DM Mono', monospace; }
@@ -408,7 +461,6 @@
       color: var(--gold); border: .5px solid rgba(201,150,58,.4); background: rgba(201,150,58,.08);
       padding: 1px 6px; border-radius: 2px;
     }
-
   </style>
 </head>
 <body>
@@ -634,7 +686,7 @@
         <div class="soon-pill">26/27 Season Coming Soon</div>
       <div class="nav-menu" id="navMenu">
         <button class="nav-menu-btn" id="navMenuBtn" aria-haspopup="true" aria-expanded="false">
-          Menu
+          <span>Menu</span>
           <svg width="9" height="6" viewBox="0 0 9 6" fill="none"><path d="M1 1L4.5 5L8 1" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </button>
         <div class="nav-dropdown" role="menu">
@@ -646,7 +698,7 @@
           <a href="#managers" role="menuitem">Managers</a>
           <div class="nav-dropdown-sep"></div>
           <div class="nav-dropdown-label">More</div>
-          <a href="news.html" role="menuitem">League News <span class="tag-new">New</span></a>
+          <a href="news.html" role="menuitem"><span>League News</span> <span class="tag-new">New</span></a>
         </div>
       </div>
       </div>
@@ -705,67 +757,27 @@
       <div class="sponsor-grid">
 
         <!-- Farooj Shmaitilly -->
-        <div class="sponsor-card">
-          <div class="sponsor-logo" style="background:#fff5e6;">
-            <svg width="30" height="30" viewBox="0 0 30 30" fill="none" aria-hidden="true">
-              <path d="M15 4C11 4 8 7 8 10.5C8 14.5 11 17 13 19.5L13 24L17 24L17 19.5C19 17 22 14.5 22 10.5C22 7 19 4 15 4Z" fill="#e8501a" opacity=".9"/>
-              <ellipse cx="15" cy="24.5" rx="3" ry="1.3" fill="#c94010"/>
-              <path d="M11 10.5 Q15 8 19 10.5" stroke="#fff" stroke-width="1.3" stroke-linecap="round" fill="none"/>
-            </svg>
+        <div class="sponsor-card clickable" onclick="sponsorEffect(this,'chicken')">
+          <div class="sponsor-logo" style="background:#fff5e6;padding:0;overflow:hidden;">
+            <img src="data:image/jpeg;base64,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" alt="Farooj Shmaitilly logo" style="width:100%;height:100%;object-fit:cover;border-radius:8px;" />
           </div>
           <div class="sponsor-name">Farooj Shmaitilly</div>
           <div class="sponsor-meta">Official Matchday<br>Food Partner<br>🇱🇧 Lebanon</div>
         </div>
 
-        <!-- UDE -->
-        <div class="sponsor-card">
-          <div class="sponsor-logo" style="background:#e8f0fb;">
-            <svg width="30" height="30" viewBox="0 0 30 30" fill="none" aria-hidden="true">
-              <rect x="4" y="15" width="22" height="11" rx="1" fill="#1a3a8a" opacity=".85"/>
-              <polygon points="15,4 3,15 27,15" fill="#1a3a8a"/>
-              <rect x="12" y="18" width="6" height="8" fill="#e8f0fb"/>
-            </svg>
-          </div>
-          <div class="sponsor-name">Uni. Duisburg-Essen</div>
-          <div class="sponsor-meta">Academic Excellence<br>Partner<br>🇩🇪 Germany</div>
-        </div>
-
-        <!-- Atilim -->
-        <div class="sponsor-card">
-          <div class="sponsor-logo" style="background:#fdf0f0;">
-            <svg width="30" height="30" viewBox="0 0 30 30" fill="none" aria-hidden="true">
-              <circle cx="15" cy="14" r="10" fill="none" stroke="#c0272d" stroke-width="2"/>
-              <path d="M9 14 L15 6 L21 14" stroke="#c0272d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-              <rect x="12" y="17" width="6" height="7" rx=".5" fill="#c0272d" opacity=".7"/>
-            </svg>
-          </div>
-          <div class="sponsor-name">Atilim University</div>
-          <div class="sponsor-meta">Knowledge &amp; Growth<br>Partner<br>🇹🇷 Ankara</div>
-        </div>
-
         <!-- Erbil -->
-        <div class="sponsor-card">
-          <div class="sponsor-logo" style="background:#edfaf3;">
-            <svg width="30" height="30" viewBox="0 0 30 30" fill="none" aria-hidden="true">
-              <rect x="5" y="5" width="20" height="20" rx="2" fill="#0a7a4b" opacity=".1"/>
-              <rect x="13.5" y="7" width="3" height="16" rx="1.5" fill="#0a7a4b"/>
-              <rect x="7" y="13.5" width="16" height="3" rx="1.5" fill="#0a7a4b"/>
-            </svg>
+        <div class="sponsor-card clickable" onclick="sponsorEffect(this,'medical')">
+          <div class="sponsor-logo" style="background:#edfaf3;padding:0;overflow:hidden;">
+            <img src="data:image/jpeg;base64,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" alt="Erbil International Hospital logo" style="width:100%;height:100%;object-fit:cover;border-radius:8px;" />
           </div>
           <div class="sponsor-name">Erbil Intl Hospital</div>
           <div class="sponsor-meta">Official Healthcare<br>Partner<br>🇮🇶 Kurdistan</div>
         </div>
 
         <!-- Law School India -->
-        <div class="sponsor-card">
-          <div class="sponsor-logo" style="background:#f5f0fa;">
-            <svg width="30" height="30" viewBox="0 0 30 30" fill="none" aria-hidden="true">
-              <line x1="15" y1="5" x2="15" y2="25" stroke="#5b2d8e" stroke-width="1.8" stroke-linecap="round"/>
-              <line x1="7" y1="11" x2="23" y2="11" stroke="#5b2d8e" stroke-width="1.8" stroke-linecap="round"/>
-              <path d="M7 11 Q5 16 7 20" stroke="#5b2d8e" stroke-width="1.5" fill="none" stroke-linecap="round"/>
-              <path d="M23 11 Q25 16 23 20" stroke="#5b2d8e" stroke-width="1.5" fill="none" stroke-linecap="round"/>
-              <ellipse cx="15" cy="25.5" rx="4.5" ry="1.1" fill="#5b2d8e" opacity=".45"/>
-            </svg>
+        <div class="sponsor-card clickable" onclick="sponsorEffect(this,'gavel')">
+          <div class="sponsor-logo" style="background:#f5f0fa;padding:0;overflow:hidden;">
+            <img src="data:image/jpeg;base64,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" alt="Law School India logo" style="width:100%;height:100%;object-fit:cover;border-radius:8px;" />
           </div>
           <div class="sponsor-name">Law School India</div>
           <div class="sponsor-meta">Legal Excellence<br>Partner<br>🇮🇳 India</div>
@@ -932,7 +944,7 @@
       </div>
       <div class="award-note">
         <svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true"><circle cx="6.5" cy="6.5" r="5.5" stroke="currentColor" stroke-width="1.2"/><line x1="6.5" y1="4.5" x2="6.5" y2="7.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/><circle cx="6.5" cy="9.5" r=".65" fill="currentColor"/></svg>
-        Season 24/25 carried no awards. The prestige programme begins from 25/26 onwards.
+        <span>Season 24/25 carried no awards. The prestige programme begins from 25/26 onwards.</span>
       </div>
       <div class="awards-col-header">
         <div></div>
@@ -962,60 +974,63 @@
 
   </div><!-- /page -->
 
+
+
+
   <script>
     /* ── Data ── */
     const managers = [
       {
-        name:'Karrar', team:'Karsel FC', h2h:0, cup:0, draft:0, classic:0,
-        accentColor:'#1a3a8a', title:'The Administrator', subtitle:'Visionary & Founder', fav:'Bruno Fernandes',
+        name:'Karrar', team:'Karsel FC', h2h:0, cup:0, draft:0, classic:0, accentColor:'#1a3a8a',
+        title:'The Administrator', subtitle:'Visionary &amp; Founder', fav:'Bruno Fernandes',
         bio:'The Administrator, moderator and the visionary behind the league\'s establishment and ongoing improvement. It all started with 2 young men, 1 idea, 1 call — and the rest is history. He takes pride in his football knowledge and is a tactician by heart, well versed in the world of football and FPL.',
         style:'Mixed study of real football, underlying stats, prior knowledge, and current trends.',
         rivals:['Zain','Nabil','Hameed','Akram'],
         rivalNote:'Zain (heritage) · Nabil (clash of ideals) · Hameed (family derby) · Akram (pure mutual trolling)'
       },
       {
-        name:'Hameed', team:'Kung Fu Hamoodi', h2h:1, cup:0, draft:1, classic:1,
-        accentColor:'#C9963A', title:'The Record Breaker', subtitle:'Youngest entrant', fav:'Tarkowski',
+        name:'Hameed', team:'Kung Fu Hamoodi', h2h:1, cup:0, draft:1, classic:1, accentColor:'#C9963A',
+        title:'The Record Breaker', subtitle:'Youngest entrant', fav:'Tarkowski',
         bio:'The youngest entrant in All Stars Super League. He started watching football and following FPL just two years ago — young, inexperienced, and humble. But don\'t let that fool you: at record speed, like an AI, he got the hang of it, destroyed every record and won almost everything, proving himself on the world\'s stage. He uses logic mixed with emotional background and love to help others — but don\'t test him for long, as he will wipe the floor with your bum.',
         style:'Simple forward thinking and judging of future scenarios and past trends with effective use of whatever knowledge he attains from his surroundings, lacking real-football bias.',
         rivals:['Karrar','Akram','Zain','Omar'],
         rivalNote:'Karrar (family derby) · Akram (pure FPL hate) · Zain (legacy destruction) · Omar (Uni frenemies, Drake vs Kendrick)'
       },
       {
-        name:'Nabil', team:'ChoupoMotingtheGoat', h2h:0, cup:0, draft:0, classic:0,
-        accentColor:'#b03020', title:'The Next Big Thing', subtitle:'Full-time debut 25/26', fav:'Thiago',
+        name:'Nabil', team:'ChoupoMotingtheGoat', h2h:0, cup:0, draft:0, classic:0, accentColor:'#b03020',
+        title:'The Next Big Thing', subtitle:'Full-time debut 25/26', fav:'Thiago',
         bio:'Took a trainee programme under Karrar the season prior; Nabil debuted full-time in 25/26. He loves silly gimmicks and hyperfocuses every GW on every single player — detrimental at times, evident by his explosive addiction to transfers. Not shy to ask for help from opposing managers. Has sworn to be the next big thing and talks a lot. Compensates for his lack of self-control with very flexible squad rebuilding. Very inconsistent: very high highs and super low lows — holds the highest pts in Main and most consecutive loss streak, while also posting one of the lowest single-GW tallies in Draft.',
         style:'Free-for-all squad regeneration, extra focus on past point records, susceptible to recency and past bias.',
         rivals:['Karrar','Hameed','Akram'],
         rivalNote:'Karrar (clash of ideals, frenemies) · Hameed (love-hate relationship) · Akram (Bayern derby)'
       },
       {
-        name:'Akram', team:'Bayer Neverlusen', h2h:0, cup:0, draft:1, classic:0,
-        accentColor:'#2c7a2c', title:'The Philosopher', subtitle:'Draft champion 24/25', fav:'Sesko',
+        name:'Akram', team:'Bayer Neverlusen', h2h:0, cup:0, draft:1, classic:0, accentColor:'#2c7a2c',
+        title:'The Philosopher', subtitle:'Draft champion 24/25', fav:'Sesko',
         bio:'Known for being very philosophical, at times shooting himself in the foot. Akram has always taken pride in being against the flock — weird selections that, if they work, net him significant bragging rights. Yet most of the time it ends up being his own undoing. He has clear knowledge of real football but fails to translate it to FPL due to infighting with his own philosophical tendencies. One to watch — albeit he sometimes suffers from what philosophers also suffer from: overthinking, stress, and depression from lineups.',
         style:'Team differentialisation, selecting based on real-life outlook — and sometimes suffering past bias.',
         rivals:['Karrar','Nabil','Zain','Hameed'],
         rivalNote:'Karrar (pure football, something to prove) · Nabil (frustration at his decisions) · Zain (family derby) · Hameed (records deletion)'
       },
       {
-        name:'Zain', team:'CityZain FC', h2h:0, cup:0, draft:0, classic:0,
-        accentColor:'#5b4ecf', title:'The Veteran', subtitle:'Longest FPL tenure', fav:'Haaland & Salah',
+        name:'Zain', team:'CityZain FC', h2h:0, cup:0, draft:0, classic:0, accentColor:'#5b4ecf',
+        title:'The Veteran', subtitle:'Longest FPL tenure', fav:'Haaland &amp; Salah',
         bio:'Plays different personas and loves to think he understands everything. Known for his longevity claims and false prophecies about certain FPL aspects. He is the oldest FPL participant in the league, boasting experience — but is yet to prove himself under the All Stars Super League mantra.',
         style:'Huge devotion to FPL pillars like Salah and Watkins, smart differential choices but bad transfers most of the time, and a very poor reading of the future.',
         rivals:['Karrar','Akram','Hameed'],
         rivalNote:'Karrar (long-term friends, FPL heritage) · Akram (family derby) · Hameed (bad losses, Drake vs Kendrick)'
       },
       {
-        name:'Omar', team:'CTRL + PEDRI + PASS', h2h:0, cup:1, draft:0, classic:0,
-        accentColor:'#c07830', title:'The Comeback King', subtitle:'Cup winner 25/26', fav:'Szoboszlai',
+        name:'Omar', team:'CTRL + PEDRI + PASS', h2h:0, cup:1, draft:0, classic:0, accentColor:'#c07830',
+        title:'The Comeback King', subtitle:'Cup winner 25/26', fav:'Szoboszlai',
         bio:'Boasts about not giving a care, thinking it\'s cool, and promised strong comebacks after a shaky start. It was certainly one of his weakest seasons and the first under All Stars Super League. He has the FPL expertise to be in the top 1% but his decision making has been suffering and he made some blunders that cost him titles. He adores Hameed to the point of copying some of his decisions.',
         style:'Huge reading of possible future scenarios based on past experiences, strict analysis of point turnover — though he suffers Liverpool bias at times.',
         rivals:['Hameed'],
         rivalNote:'Hameed (Drake vs Kendrick, Uni frenemies)'
       },
       {
-        name:'Anshal', team:'x3vious', h2h:0, cup:0, draft:0, classic:0,
-        accentColor:'#7a2c8a', title:'The Debutant', subtitle:'Youngest FPL debutant', fav:'Bruno Fernandes',
+        name:'Anshal', team:'x3vious', h2h:0, cup:0, draft:0, classic:0, accentColor:'#7a2c8a',
+        title:'The Debutant', subtitle:'Youngest FPL debutant', fav:'Bruno Fernandes',
         bio:'The youngest debutant in FPL showed a strong, promising half season and is ready to compete all-out. He made sure he stands out with safe team selection coupled with extra weird differential assets. He badmouths everyone he likes — but he has a thing for someone yet to debut.',
         style:'FPL based on real-life football knowledge and huge reliance on total point history.',
         rivals:['Daniel'],
@@ -1034,7 +1049,7 @@
         title: 'One for the Future',
         desc: 'Recognises the manager showing the most promising development and long-term potential.',
         winner: 'Karrar',
-        winnerSub: 'The Administrator — continuous evolution & vision'
+        winnerSub: 'The Administrator — continuous evolution &amp; vision'
       },
       {
         title: 'Transfer of the Season',
@@ -1044,13 +1059,13 @@
       },
       {
         title: 'Best Defense',
-        desc: 'Awarded to the manager who built the most formidable defensive setup across Main & Draft.',
+        desc: 'Awarded to the manager who built the most formidable defensive setup across Main &amp; Draft.',
         winner: 'Hameed',
         winnerSub: 'Tightest backline across both Main and Draft leagues'
       },
       {
         title: 'Best Attack',
-        desc: 'Recognises the highest-scoring, most clinical attacking lineup across Main & Draft.',
+        desc: 'Recognises the highest-scoring, most clinical attacking lineup across Main &amp; Draft.',
         winner: 'Hameed',
         winnerSub: 'Top attacking output across both Main and Draft leagues'
       },
@@ -1179,7 +1194,6 @@
           <div class="mgr-toggle" id="mgr-toggle-${idx}">+ expand</div>
         </div>`;
 
-      /* toggle on header or footer click */
       const toggle = () => {
         const body = document.getElementById(`mgr-body-${idx}`);
         const tog  = document.getElementById(`mgr-toggle-${idx}`);
@@ -1194,7 +1208,7 @@
 
     /* ── Tab switcher ── */
     function switchTab(type, btn) {
-      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.tab').forEach(el => el.classList.remove('active'));
       document.querySelectorAll('.rec-panel').forEach(p => p.classList.remove('active'));
       btn.classList.add('active');
       document.getElementById('panel-' + type).classList.add('active');
@@ -1223,6 +1237,92 @@
         a.addEventListener('click', close);
       });
     })();
+  </script>
+
+  <script>
+    /* ── Sponsor click effects ── */
+    const FX_SETS = {
+      chicken: ['🍗','🍗','🍖','🍗','🍖','🍗'],
+      medical: ['💉','💊','💉','💊','🩹','💊'],
+    };
+
+    function spawnBurst(originX, originY, emojis) {
+      let layer = document.querySelector('.fx-layer');
+      if (!layer) {
+        layer = document.createElement('div');
+        layer.className = 'fx-layer';
+        document.body.appendChild(layer);
+      }
+      emojis.forEach((emoji, i) => {
+        const item = document.createElement('div');
+        item.className = 'fx-item';
+        item.textContent = emoji;
+
+        const angle = (Math.PI * (0.15 + Math.random() * 0.7)) * (Math.random() < 0.5 ? -1 : 1) - Math.PI/2;
+        const dist1 = 70 + Math.random() * 90;
+        const dist2 = 40 + Math.random() * 60;
+
+        const x1 = Math.cos(angle) * dist1;
+        const y1 = Math.sin(angle) * dist1;
+        const x2 = x1 + (Math.random() - 0.5) * 60;
+        const y2 = y1 + 180 + Math.random() * 120;
+
+        const rot = (Math.random() * 360 - 180);
+        const rot2 = rot + (Math.random() * 360 - 180);
+        const dur = 0.9 + Math.random() * 0.6;
+        const delay = i * 0.04;
+
+        item.style.left = originX + 'px';
+        item.style.top = originY + 'px';
+        item.style.setProperty('--fx-x', x1 + 'px');
+        item.style.setProperty('--fx-y', y1 + 'px');
+        item.style.setProperty('--fx-x2', x2 + 'px');
+        item.style.setProperty('--fx-y2', y2 + 'px');
+        item.style.setProperty('--fx-rot', rot + 'deg');
+        item.style.setProperty('--fx-rot2', rot2 + 'deg');
+        item.style.setProperty('--fx-dur', dur + 's');
+        item.style.animationDelay = delay + 's';
+        item.style.fontSize = (26 + Math.random() * 16) + 'px';
+
+        layer.appendChild(item);
+        setTimeout(() => item.remove(), (dur + delay) * 1000 + 100);
+      });
+    }
+
+    function spawnGavel() {
+      const gavel = document.createElement('div');
+      gavel.className = 'fx-gavel';
+      gavel.textContent = '🔨';
+      document.body.appendChild(gavel);
+
+      const crack = document.createElement('div');
+      crack.className = 'fx-crack';
+      crack.textContent = 'ORDER!';
+      document.body.appendChild(crack);
+
+      document.body.classList.add('fx-shaking');
+
+      setTimeout(() => {
+        gavel.remove();
+        crack.remove();
+        document.body.classList.remove('fx-shaking');
+      }, 1300);
+    }
+
+    function sponsorEffect(el, type) {
+      const rect = el.getBoundingClientRect();
+      const originX = rect.left + rect.width / 2;
+      const originY = rect.top + rect.height / 2;
+
+      if (type === 'gavel') {
+        spawnGavel();
+        return;
+      }
+
+      const set = FX_SETS[type];
+      if (!set) return;
+      spawnBurst(originX, originY, set);
+    }
   </script>
 </body>
 </html>
