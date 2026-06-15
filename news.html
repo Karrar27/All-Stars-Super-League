@@ -349,6 +349,15 @@
       padding: 3px 9px; border-radius: 2px; color: #fff;
     }
     .article-date { font-size: 10px; font-family: 'DM Mono', monospace; color: var(--ink-3); letter-spacing: .04em; }
+    .just-in-badge {
+      display: inline-flex; align-items: center; gap: 5px;
+      font-size: 9px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase;
+      padding: 3px 9px; border-radius: 2px; color: #fff;
+      background: var(--gold);
+      animation: justInPulse 1.6s ease-in-out infinite;
+    }
+    .just-in-badge .jd { width: 6px; height: 6px; border-radius: 50%; background: #fff; }
+    @keyframes justInPulse { 0%,100% { opacity: 1; } 50% { opacity: .55; } }
     .article h2 {
       font-family: 'Playfair Display', serif; font-weight: 900;
       font-size: clamp(22px, 3.6vw, 30px); line-height: 1.15; letter-spacing: -.01em;
@@ -496,7 +505,7 @@
       background: #050505;
       overflow: hidden;
       cursor: pointer;
-      animation: nsFadeOut 0.6s ease-in-out 3.4s forwards;
+      animation: nsFadeOut 0.6s ease-in-out 8.3s forwards;
     }
     #newsSplash.gone { display: none; }
     @keyframes nsFadeOut {
@@ -622,8 +631,8 @@
       height: 100%;
       font-family: 'DM Mono', monospace; font-weight: 500;
       font-size: 11px; letter-spacing: .15em; color: #fff;
-      padding-left: 100%;
-      animation: nsTickerScroll 9s linear 2.1s infinite;
+      padding-left: 30%;
+      animation: nsTickerScroll 20s linear 1.9s infinite;
     }
     .ns-dot { color: rgba(255,255,255,.5); font-size: 8px; }
     @keyframes nsTickerScroll {
@@ -712,8 +721,8 @@
           sub.stop(stabTime + 0.5);
 
           // Ticking rhythm under the ticker (~2.0s–3.2s)
-          for (var t = 0; t < 5; t++) {
-            var tickTime = now + 2.0 + t * 0.26;
+          for (var t = 0; t < 9; t++) {
+            var tickTime = now + 2.0 + t * 0.75;
             var tick = ctx.createOscillator();
             tick.type = 'square';
             tick.frequency.value = 1200;
@@ -752,7 +761,7 @@
         splash.style.transition = 'opacity 0.35s ease';
         setTimeout(function(){ splash.classList.add('gone'); }, 360);
       }
-      setTimeout(function(){ splash.classList.add('gone'); }, 4100);
+      setTimeout(function(){ splash.classList.add('gone'); }, 9000);
       splash.addEventListener('click', dismiss);
       splash.addEventListener('touchstart', dismiss, { passive: true });
     })();
@@ -797,182 +806,88 @@
       <hr class="rule">
     </header>
 
-    <!-- ARTICLE 1 — Ammar -->
-    <article class="article" id="ammar-debut">
+    <!-- ARTICLE 0 — Zain interview (NEWEST) -->
+    <article class="article" id="zain-interview">
       <div class="article-meta">
-        <span class="article-tag" style="background:var(--blue-s);">Transfers &amp; Arrivals</span>
+        <span class="article-tag" style="background:var(--red);">Exclusive Interview</span>
         <span class="article-date">26/27 Preview · Pre-Season</span>
+        <span class="just-in-badge"><span class="jd"></span>Just In</span>
       </div>
-      <h2>The New Face on the Touchline: Ammar Set to Make His All Stars Bow</h2>
-      <p class="deck">A familiar name from outside the league's footballing circles is stepping into the dugout — and both Nabil and Karrar know exactly what's coming.</p>
+      <h2>"I Put My Leg on All of Them": Zain Holds Nothing Back in Explosive Season Review</h2>
+      <p class="deck">In a sit-down interview yesterday, the league's longest-serving manager looked back on a forgettable 25/26 — and didn't spare a single rival on the way out.</p>
 
       <div class="article-figure">
-        <svg viewBox="0 0 600 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Illustration of a silhouetted figure walking through a stadium tunnel toward bright light">
+        <svg viewBox="0 0 600 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Illustration of a microphone with bold sound wave lines and a small warning triangle, suggesting a heated interview">
           <rect width="600" height="300" fill="#faf8f4"/>
-          <!-- Tunnel walls -->
-          <path d="M0 0 L210 0 L300 150 L210 300 L0 300 Z" fill="#0e0e0e" opacity="0.05"/>
-          <path d="M600 0 L390 0 L300 150 L390 300 L600 300 Z" fill="#0e0e0e" opacity="0.05"/>
-          <!-- Tunnel rings -->
-          <g stroke="#C9963A" stroke-width="1.5" fill="none" opacity="0.35">
-            <ellipse cx="300" cy="150" rx="70" ry="110"/>
-            <ellipse cx="300" cy="150" rx="110" ry="150"/>
-            <ellipse cx="300" cy="150" rx="150" ry="190"/>
+          <!-- Radiating heat lines -->
+          <g stroke="var(--red)" stroke-width="1.5" opacity="0.25" fill="none">
+            <circle cx="300" cy="150" r="70"/>
+            <circle cx="300" cy="150" r="100"/>
+            <circle cx="300" cy="150" r="130"/>
           </g>
-          <!-- Light burst -->
-          <circle cx="300" cy="150" r="46" fill="#C9963A" opacity="0.18"/>
-          <circle cx="300" cy="150" r="24" fill="#C9963A" opacity="0.35"/>
-          <!-- Figure -->
-          <g transform="translate(300,150)">
-            <ellipse cx="0" cy="58" rx="22" ry="6" fill="#0e0e0e" opacity="0.12"/>
-            <rect x="-10" y="-4" width="20" height="46" rx="6" fill="#0e0e0e"/>
-            <circle cx="0" cy="-18" r="13" fill="#0e0e0e"/>
-            <rect x="-9" y="6" width="7" height="34" rx="3" fill="#0e0e0e"/>
-            <rect x="2" y="6" width="7" height="34" rx="3" fill="#0e0e0e"/>
+          <!-- Sound wave bars -->
+          <g fill="var(--red)" opacity="0.8">
+            <rect x="120" y="120" width="8" height="60" rx="2"/>
+            <rect x="140" y="100" width="8" height="100" rx="2"/>
+            <rect x="160" y="130" width="8" height="40" rx="2"/>
+            <rect x="440" y="130" width="8" height="40" rx="2"/>
+            <rect x="460" y="100" width="8" height="100" rx="2"/>
+            <rect x="480" y="120" width="8" height="60" rx="2"/>
           </g>
-          <!-- jersey number badge -->
-          <g transform="translate(470,55)">
-            <rect x="-26" y="-16" width="52" height="32" rx="4" fill="none" stroke="#C9963A" stroke-width="1.5"/>
-            <text x="0" y="6" font-family="Playfair Display, serif" font-weight="900" font-size="20" fill="#C9963A" text-anchor="middle">NEW</text>
-          </g>
-        </svg>
-      </div>
-
-      <div class="article-body">
-        <p>It's not often that a single pre-season announcement sends a ripple through every corner of the league's group chat — but news of <strong>Ammar's</strong> impending debut in the 26/27 season has done exactly that.</p>
-        <p>Ammar is no stranger to competitive battles, even if his name hasn't yet appeared on an All Stars Super League scoresheet. His history with both <strong>Nabil</strong> and <strong>Karrar</strong> stretches back to ventures well outside football — shared projects, shared rivalries, and by all accounts, more than a few scores still considered unsettled. Those who know him describe a competitor who treats every contest, regardless of the arena, with the same intensity.</p>
-        <p>On the FPL side, Ammar's reputation precedes him. Sources close to the new arrival describe a "decent" track record — the kind of understated phrase that, in this league, usually means someone has quietly been finishing in the top brackets of their previous leagues for years without making much noise about it.</p>
-        <div class="pullquote">
-          "He's calm, he's calculated, and he already knows how Nabil thinks and how Karrar plans. That's not a great combination for either of them."
-          <span class="pullquote-cite">— A source close to the new arrival</span>
-        </div>
-        <p>With the league set to expand for 26/27 (more on that elsewhere in this issue), Ammar's entrance adds another genuine contender to an already crowded field. Karrar, fresh off his own vow to chase silverware next season, and Nabil, still nursing the wounds of a Draft League collapse, may find their first major test of the new campaign arriving from somewhere much closer to home than they expected.</p>
-        <p>The All Stars Super League newsroom will have a full profile on Ammar — including his squad-building philosophy and opening transfers — once pre-season draft activity begins.</p>
-      </div>
-    </article>
-
-    <!-- ARTICLE 2 — Hameed dominance -->
-    <article class="article" id="hameed-dominance">
-      <div class="article-meta">
-        <span class="article-tag" style="background:var(--gold);">Season Review</span>
-        <span class="article-date">25/26 · Final Review</span>
-      </div>
-      <h2>Hameed's Treble Season: Inside a Record-Breaking Campaign</h2>
-      <p class="deck">Three titles, a host of shattered records, and a campaign that will be discussed for years — the numbers behind the most dominant individual season the league has seen.</p>
-
-      <div class="article-figure">
-        <svg viewBox="0 0 600 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Illustration of an ascending bar chart topped with a crown and three trophies">
-          <rect width="600" height="300" fill="#faf8f4"/>
-          <!-- Ground line -->
-          <line x1="0" y1="250" x2="600" y2="250" stroke="#d8d4ce" stroke-width="1"/>
-          <!-- Bars -->
-          <g>
-            <rect x="90"  y="190" width="46" height="60"  fill="#0e0e0e" opacity="0.10"/>
-            <rect x="180" y="150" width="46" height="100" fill="#0e0e0e" opacity="0.16"/>
-            <rect x="270" y="100" width="46" height="150" fill="#0e0e0e" opacity="0.22"/>
-            <rect x="360" y="60"  width="46" height="190" fill="#C9963A" opacity="0.85"/>
-            <rect x="450" y="35"  width="46" height="215" fill="#C9963A"/>
-          </g>
-          <!-- Crown on top bar -->
-          <g transform="translate(473,18)">
-            <path d="M-20 12 L-12 -8 L-4 6 L0 -12 L4 6 L12 -8 L20 12 Z" fill="#C9963A" stroke="#0e0e0e" stroke-width="1.2" stroke-linejoin="round"/>
-          </g>
-          <!-- Trophy row -->
-          <g transform="translate(120,40)" fill="none" stroke="#0e0e0e" stroke-width="1.4">
-            <path d="M-12 0 h24 v6 a12 12 0 0 1 -24 0 Z"/>
-            <path d="M-12 2 a-8 8 0 0 0 -8 8 a8 8 0 0 0 8 6" />
-            <path d="M12 2 a8 8 0 0 1 8 8 a8 8 0 0 1 -8 6" />
-            <rect x="-4" y="14" width="8" height="6"/>
-            <rect x="-10" y="20" width="20" height="4" rx="1"/>
-          </g>
-          <g transform="translate(160,40)" fill="none" stroke="#0e0e0e" stroke-width="1.4">
-            <path d="M-12 0 h24 v6 a12 12 0 0 1 -24 0 Z"/>
-            <path d="M-12 2 a-8 8 0 0 0 -8 8 a8 8 0 0 0 8 6" />
-            <path d="M12 2 a8 8 0 0 1 8 8 a8 8 0 0 1 -8 6" />
-            <rect x="-4" y="14" width="8" height="6"/>
-            <rect x="-10" y="20" width="20" height="4" rx="1"/>
-          </g>
-          <g transform="translate(200,40)" fill="none" stroke="#0e0e0e" stroke-width="1.4">
-            <path d="M-12 0 h24 v6 a12 12 0 0 1 -24 0 Z"/>
-            <path d="M-12 2 a-8 8 0 0 0 -8 8 a8 8 0 0 0 8 6" />
-            <path d="M12 2 a8 8 0 0 1 8 8 a8 8 0 0 1 -8 6" />
-            <rect x="-4" y="14" width="8" height="6"/>
-            <rect x="-10" y="20" width="20" height="4" rx="1"/>
-          </g>
-          <!-- label -->
-          <text x="473" y="280" font-family="DM Mono, monospace" font-size="11" fill="#7a7a7a" text-anchor="middle" letter-spacing="1">HAMEED</text>
-        </svg>
-      </div>
-
-      <div class="article-body">
-        <p>There are good seasons, there are great seasons, and then there is whatever <strong>Hameed</strong> just produced. By the time the curtain fell on 25/26, the youngest manager in the league had claimed the <strong>Draft League title</strong>, the <strong>H2H Main title</strong>, and the <strong>Classic title</strong> — a clean sweep that the All Stars Super League has never seen from a single manager before.</p>
-        <p>The headline number tells its own story: Hameed spent <strong>35 gameweeks in 1st position</strong> across the Draft League this season — more than triple the previous benchmark, and a tally that effectively turned the title race into a formality for most of the campaign.</p>
-        <div class="stat-strip">
-          <div class="stat-chip"><div class="v">35</div><div class="l">GWs in 1st (Draft)</div></div>
-          <div class="stat-chip"><div class="v">12</div><div class="l">Win streak (Draft)</div></div>
-          <div class="stat-chip"><div class="v">17</div><div class="l">GWs in 1st (H2H Main)</div></div>
-          <div class="stat-chip"><div class="v">9</div><div class="l">Win streak (H2H)</div></div>
-          <div class="stat-chip"><div class="v">110</div><div class="l">Double GW POTW pts</div></div>
-          <div class="stat-chip"><div class="v">3</div><div class="l">Titles in one season</div></div>
-        </div>
-        <p>Even the league's record book had to be rewritten in places. The honorary Double Gameweek Points-on-the-Week mark of <strong>110 points</strong> dwarfs anything seen previously, while a <strong>12-match win streak</strong> in the Draft League put real distance between Hameed and the rest of the chasing pack before most rivals had even settled into the season.</p>
-        <p>What makes the campaign feel especially historic is the context: Hameed remains the youngest entrant in the league's history, and just two seasons removed from his introduction to organised FPL. The trajectory from newcomer to treble-winner, inside such a short window, places this season firmly in "legacy" territory — a campaign that future All Stars seasons will likely be measured against.</p>
-        <p>With three trophies added to his cabinet in a single year and the league heading into an expanded 26/27 season, the obvious question is whether anyone can find an answer before Hameed's dominance becomes the new normal.</p>
-      </div>
-    </article>
-
-    <!-- ARTICLE 3 — Karrar speech -->
-    <article class="article" id="karrar-vow">
-      <div class="article-meta">
-        <span class="article-tag" style="background:#1a3a8a;">Awards Night</span>
-        <span class="article-date">25/26 · Awards Ceremony</span>
-      </div>
-      <h2>"One for the Future" — and a Promise for Right Now: Karrar's Awards Night Vow</h2>
-      <p class="deck">The league's founder collected individual hardware for the first time in years — and used the moment to put the rest of the table on notice.</p>
-
-      <div class="article-figure">
-        <svg viewBox="0 0 600 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Illustration of a podium with a spotlight and a microphone, with a medal in the foreground">
-          <rect width="600" height="300" fill="#faf8f4"/>
-          <!-- Spotlight cone -->
-          <path d="M300 0 L210 300 L390 300 Z" fill="#C9963A" opacity="0.10"/>
-          <path d="M300 0 L255 300 L345 300 Z" fill="#C9963A" opacity="0.12"/>
-          <!-- Podium -->
-          <g fill="#0e0e0e" opacity="0.08">
-            <rect x="220" y="200" width="160" height="60"/>
-          </g>
-          <rect x="220" y="200" width="160" height="60" fill="none" stroke="#0e0e0e" stroke-width="1.2"/>
-          <text x="300" y="238" font-family="Playfair Display, serif" font-weight="900" font-size="26" fill="#0e0e0e" text-anchor="middle">25/26</text>
           <!-- Microphone -->
-          <g transform="translate(420,90)">
-            <rect x="-6" y="-30" width="12" height="40" rx="6" fill="#0e0e0e"/>
-            <rect x="-3" y="10" width="6" height="50" fill="#0e0e0e" opacity="0.4"/>
-            <line x1="-3" y1="60" x2="20" y2="60" stroke="#0e0e0e" stroke-width="2" opacity="0.4"/>
+          <g transform="translate(300,150)">
+            <rect x="-20" y="-60" width="40" height="70" rx="20" fill="#0e0e0e"/>
+            <rect x="-26" y="-10" width="52" height="36" rx="26" fill="none" stroke="#0e0e0e" stroke-width="3"/>
+            <line x1="0" y1="26" x2="0" y2="58" stroke="#0e0e0e" stroke-width="3"/>
+            <line x1="-26" y1="58" x2="26" y2="58" stroke="#0e0e0e" stroke-width="3" stroke-linecap="round"/>
+            <g stroke="#faf8f4" stroke-width="2" opacity="0.5">
+              <line x1="-10" y1="-45" x2="10" y2="-45"/>
+              <line x1="-10" y1="-35" x2="10" y2="-35"/>
+              <line x1="-10" y1="-25" x2="10" y2="-25"/>
+            </g>
           </g>
-          <!-- Medal -->
-          <g transform="translate(180,90)">
-            <path d="M0 0 L-16 -40 L16 -40 Z" fill="none" stroke="#C9963A" stroke-width="2"/>
-            <circle cx="0" cy="14" r="26" fill="#C9963A" opacity="0.18" stroke="#C9963A" stroke-width="2"/>
-            <text x="0" y="20" font-family="Playfair Display, serif" font-weight="900" font-size="14" fill="#C9963A" text-anchor="middle">OFTF</text>
-          </g>
-          <!-- Sparkles -->
-          <g fill="#C9963A">
-            <circle cx="120" cy="50" r="2.5"/>
-            <circle cx="500" cy="60" r="2"/>
-            <circle cx="470" cy="180" r="2.5"/>
-            <circle cx="100" cy="200" r="2"/>
+          <!-- Warning / heated marker -->
+          <g transform="translate(390,72)">
+            <path d="M0 -16 L18 14 L-18 14 Z" fill="var(--gold)" stroke="#0e0e0e" stroke-width="1.5" stroke-linejoin="round"/>
+            <line x1="0" y1="-6" x2="0" y2="4" stroke="#0e0e0e" stroke-width="2" stroke-linecap="round"/>
+            <circle cx="0" cy="9" r="1.4" fill="#0e0e0e"/>
           </g>
         </svg>
       </div>
 
       <div class="article-body">
-        <p>For a man widely regarded as the heart and brain of the All Stars Super League, the trophy cabinet has remained — until now — conspicuously bare. That changed on awards night, when <strong>Karrar</strong> was named the winner of <strong>"One for the Future"</strong>, the award recognising the manager showing the most promising development and long-term potential.</p>
-        <p>It's a notable moment for the league's founder. Karrar built the All Stars Super League from a single phone call between two friends into the multi-competition institution it is today, all while continuing to be — by his own admission — one of the league's most tactically literate managers without the silverware to show for it.</p>
+        <p>If anyone was hoping <strong>Zain</strong> would quietly move on from a season he'd rather forget, yesterday's sit-down interview put those hopes firmly to rest. The league's longest-serving manager — by his own description, "the oldest FPL participant in the league" — used the opportunity not for reflection, but for what can only be described as a full clearing of the air. Several airs, in fact.</p>
+        <p>Asked to summarise his 25/26 campaign, Zain didn't sugarcoat it: by most measures it was one of his worst seasons yet, and he wasted no time explaining why — starting with the Draft League's opening weeks.</p>
         <div class="pullquote">
-          "I've helped build the stage for everyone else to win on it. That's been fine — I'm proud of that. But I'm not done chasing my own. Next season, I'm coming for a title. Not 'one for the future' — the real thing."
-          <span class="pullquote-cite">— Karrar, Awards Ceremony Speech, 25/26</span>
+          "Honestly? It was terrible. And it didn't help that Draft had all those technical problems right at the start of the season. That completely killed my motivation before I'd even got going."
+          <span class="pullquote-cite">— Zain, on the early-season Draft League issues</span>
         </div>
-        <p>The acceptance speech, delivered to a room that has watched Karrar narrowly miss out on major honours season after season, struck a tone that was as much a rallying cry as it was a thank-you. He acknowledged the rivalries that have defined his seasons — long-running battles with Zain, Nabil, Hameed and Akram — and framed the year ahead as the one where those rivalries finally tip in his favour.</p>
-        <p>It's worth noting that Karrar's <strong>69-point haul</strong> — the joint-highest single-gameweek score in the 25/26 Draft League, shared with Hameed — has long stood as proof of his ceiling. The missing piece, by his own admission, has been turning peak weeks into sustained title challenges.</p>
-        <p>With a new manager arriving in Ammar, an expanded league structure, and Hameed setting the bar at a historic high, Karrar's vow couldn't have come at a more pointed moment. The "One for the Future" award may be the first piece of individual hardware in his cabinet — but after this speech, few in the league will be surprised if it isn't the last.</p>
+        <p>From there, the interview took a sharp turn — from explaining his own season to reviewing everyone else's. Asked about <strong>Akram's</strong> title defence collapse, Zain didn't hold back.</p>
+        <div class="pullquote">
+          "Akram is stupid. I don't know what else to tell you."
+          <span class="pullquote-cite">— Zain, on Akram's 25/26 campaign</span>
+        </div>
+        <p>He was, if anything, even less charitable about <strong>Nabil's</strong> dramatic fall from the top of the Draft League table.</p>
+        <div class="pullquote">
+          "Nabil is a disgrace to this league. Twenty-two gameweeks at the top and then that? Come on."
+          <span class="pullquote-cite">— Zain, on Nabil's second-half collapse</span>
+        </div>
+        <p>Even managers who haven't played a single gameweek yet weren't safe. With <strong>Ammar</strong> confirmed to debut in 26/27, Zain was asked for his first impressions of the league's newest arrival.</p>
+        <div class="pullquote">
+          "A weirdo. That's all I'll say for now."
+          <span class="pullquote-cite">— Zain, on incoming manager Ammar</span>
+        </div>
+        <p>By this point in the interview, it was less a season review and more a full league roll call — and Zain seemed happy to keep going, summing up his feelings toward the rest of the field in one characteristically blunt line.</p>
+        <div class="pullquote">
+          "Honestly, where do you even bring all these people from? I put my leg on all of them."
+          <span class="pullquote-cite">— Zain, on the league's managers, collectively</span>
+        </div>
+        <p>And yet, for all the fire, the interview ended on something close to a promise. Pressed on what 26/27 might look like for him, Zain pointed straight back to where he started — the technical issues that derailed his opening weeks.</p>
+        <div class="pullquote">
+          "If everything runs smoothly next season — no technical problems, nothing getting in the way — I'll be at my best. Mark it down."
+          <span class="pullquote-cite">— Zain, looking ahead to 26/27</span>
+        </div>
+        <p>Whether that promise translates into results remains to be seen — Zain himself has acknowledged he's "yet to prove himself under the All Stars Super League mantra." But after a season this candid, one thing is certain: the league chat did not stay quiet for long after this interview went out. Akram, Nabil and Ammar have all been approached for comment. The Wire will update this story if any of them respond.</p>
       </div>
     </article>
 
@@ -1048,60 +963,58 @@
         <p>One thing is certain — with a bigger league, a changing Premier League landscape, and several open scores still to settle, 26/27 is shaping up to be the most closely watched season the All Stars Super League has ever run.</p>
       </div>
     </article>
-
-    <!-- ARTICLE 5 — Akram/Nabil collapse -->
-    <article class="article" id="title-defence-collapse">
+    <!-- ARTICLE 1 — Ammar -->
+    <article class="article" id="ammar-debut">
       <div class="article-meta">
-        <span class="article-tag" style="background:var(--red);">Season Review</span>
-        <span class="article-date">25/26 · Final Review</span>
+        <span class="article-tag" style="background:var(--blue-s);">Transfers &amp; Arrivals</span>
+        <span class="article-date">26/27 Preview · Pre-Season</span>
       </div>
-      <h2>The Great Collapse: Akram's Title Defence Falters, Nabil's Draft Dream Unravels</h2>
-      <p class="deck">One manager couldn't follow up his maiden title. Another spent 22 gameweeks punching above his weight before the underlying numbers finally caught up. A look back at 25/26's biggest disappointments.</p>
+      <h2>The New Face on the Touchline: Ammar Set to Make His All Stars Bow</h2>
+      <p class="deck">A familiar name from outside the league's footballing circles is stepping into the dugout — and both Nabil and Karrar know exactly what's coming.</p>
 
       <div class="article-figure">
-        <svg viewBox="0 0 600 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Illustration of a cracked trophy and a line graph that rises then falls sharply">
+        <svg viewBox="0 0 600 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Illustration of a silhouetted figure walking through a stadium tunnel toward bright light">
           <rect width="600" height="300" fill="#faf8f4"/>
-          <!-- Grid -->
-          <g stroke="#d8d4ce" stroke-width="1">
-            <line x1="40" y1="60" x2="40" y2="250"/>
-            <line x1="40" y1="250" x2="560" y2="250"/>
+          <!-- Tunnel walls -->
+          <path d="M0 0 L210 0 L300 150 L210 300 L0 300 Z" fill="#0e0e0e" opacity="0.05"/>
+          <path d="M600 0 L390 0 L300 150 L390 300 L600 300 Z" fill="#0e0e0e" opacity="0.05"/>
+          <!-- Tunnel rings -->
+          <g stroke="#C9963A" stroke-width="1.5" fill="none" opacity="0.35">
+            <ellipse cx="300" cy="150" rx="70" ry="110"/>
+            <ellipse cx="300" cy="150" rx="110" ry="150"/>
+            <ellipse cx="300" cy="150" rx="150" ry="190"/>
           </g>
-          <!-- GW22 marker -->
-          <line x1="330" y1="60" x2="330" y2="250" stroke="#C9963A" stroke-width="1" stroke-dasharray="4 4" opacity="0.6"/>
-          <text x="330" y="270" font-family="DM Mono, monospace" font-size="10" fill="#7a7a7a" text-anchor="middle">GW 22</text>
-          <!-- Rising then falling line -->
-          <polyline points="40,220 120,180 200,140 280,100 330,90 400,150 470,210 560,235"
-                    fill="none" stroke="var(--red)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-          <circle cx="330" cy="90" r="5" fill="var(--red)"/>
-          <text x="330" y="76" font-family="DM Sans, sans-serif" font-size="10" fill="#b03020" text-anchor="middle" font-weight="600">Punching above weight</text>
-          <text x="500" y="226" font-family="DM Sans, sans-serif" font-size="10" fill="#b03020" text-anchor="middle" font-weight="600">Numbers catch up</text>
-          <!-- Cracked trophy -->
-          <g transform="translate(490,90)" fill="none" stroke="#0e0e0e" stroke-width="1.6" opacity="0.55">
-            <path d="M-18 0 h36 v10 a18 18 0 0 1 -36 0 Z"/>
-            <path d="M-18 3 a-12 12 0 0 0 -12 12 a12 12 0 0 0 12 9" />
-            <path d="M18 3 a12 12 0 0 1 12 12 a12 12 0 0 1 -12 9" />
-            <rect x="-6" y="20" width="12" height="10"/>
-            <rect x="-16" y="30" width="32" height="6" rx="1"/>
+          <!-- Light burst -->
+          <circle cx="300" cy="150" r="46" fill="#C9963A" opacity="0.18"/>
+          <circle cx="300" cy="150" r="24" fill="#C9963A" opacity="0.35"/>
+          <!-- Figure -->
+          <g transform="translate(300,150)">
+            <ellipse cx="0" cy="58" rx="22" ry="6" fill="#0e0e0e" opacity="0.12"/>
+            <rect x="-10" y="-4" width="20" height="46" rx="6" fill="#0e0e0e"/>
+            <circle cx="0" cy="-18" r="13" fill="#0e0e0e"/>
+            <rect x="-9" y="6" width="7" height="34" rx="3" fill="#0e0e0e"/>
+            <rect x="2" y="6" width="7" height="34" rx="3" fill="#0e0e0e"/>
           </g>
-          <line x1="478" y1="6" x2="500" y2="34" stroke="var(--red)" stroke-width="2" opacity="0.7"/>
-          <line x1="502" y1="4" x2="486" y2="36" stroke="var(--red)" stroke-width="2" opacity="0.7"/>
+          <!-- jersey number badge -->
+          <g transform="translate(470,55)">
+            <rect x="-26" y="-16" width="52" height="32" rx="4" fill="none" stroke="#C9963A" stroke-width="1.5"/>
+            <text x="0" y="6" font-family="Playfair Display, serif" font-weight="900" font-size="20" fill="#C9963A" text-anchor="middle">NEW</text>
+          </g>
         </svg>
       </div>
 
       <div class="article-body">
-        <p>Not every storyline from 25/26 was a celebration. While Hameed swept the board and Karrar earned a place on the podium, two of the league's most established names will look back on the season with frustration — and in one case, genuine heartbreak.</p>
-        <p><strong>Akram</strong>, the reigning Draft League champion from 24/25, came into the season as the man to beat. Instead, his title defence never got going. The same "differential" philosophy that won him his maiden title — bold, against-the-grain selections built on real-world potential — repeatedly backfired, and the season also produced his <strong>longest losing streak of 7 matches</strong>, a sharp contrast to the 24/25 campaign where he shared the league's best win streak. A manager who once turned bold calls into bragging rights instead found those same calls compounding his problems week after week.</p>
-        <p>But if Akram's season was a quiet fade, <strong>Nabil's</strong> was a far louder story altogether. For <strong>22 gameweeks</strong>, Nabil sat at or near the very top of the Draft League table — a remarkable feat for a manager making his full-time debut in the competition. On paper, it looked as though the league's newest full-timer was about to claim one of its biggest prizes at the first attempt.</p>
-        <p>Dig beneath the league position, though, and the shared sentiment among observers — and reportedly among rival managers themselves — was that Nabil was punching well above his weight. By underlying squad quality and total points accumulated, his side's numbers read more like a team destined for 3rd or 4th than one leading the table outright. The consensus was that the position flattered the performance: a manager riding favourable results and matchups to a rank his squad's actual point tallies simply didn't support.</p>
+        <p>It's not often that a single pre-season announcement sends a ripple through every corner of the league's group chat — but news of <strong>Ammar's</strong> impending debut in the 26/27 season has done exactly that.</p>
+        <p>Ammar is no stranger to competitive battles, even if his name hasn't yet appeared on an All Stars Super League scoresheet. His history with both <strong>Nabil</strong> and <strong>Karrar</strong> stretches back to ventures well outside football — shared projects, shared rivalries, and by all accounts, more than a few scores still considered unsettled. Those who know him describe a competitor who treats every contest, regardless of the arena, with the same intensity.</p>
+        <p>On the FPL side, Ammar's reputation precedes him. Sources close to the new arrival describe a "decent" track record — the kind of understated phrase that, in this league, usually means someone has quietly been finishing in the top brackets of their previous leagues for years without making much noise about it.</p>
         <div class="pullquote">
-          "Twenty-two gameweeks at the top doesn't tell the full story. Everyone could see the underlying numbers — the total points just weren't there for a side meant to be leading. It always felt like a 3rd or 4th place team punching above its weight, and eventually the table caught up with that."
-          <span class="pullquote-cite">— League observer, end-of-season review</span>
+          "He's calm, he's calculated, and he already knows how Nabil thinks and how Karrar plans. That's not a great combination for either of them."
+          <span class="pullquote-cite">— A source close to the new arrival</span>
         </div>
-        <p>And catch up it did. Nabil's season is now home to two unwanted records: the <strong>lowest single-gameweek score</strong> of the campaign (19 points) and the <strong>longest losing streak in H2H Main</strong> (10 matches) — both consistent with a squad whose underlying numbers had been overdue a reality check long before gameweek 22. The same hyper-reactive, transfer-heavy approach that had masked the gap between position and points eventually became the undoing, with rebuilds compounding rather than correcting the slide.</p>
-        <p>By the time the dust settled, Hameed had swept past both of them on the way to a historic treble, leaving Akram to defend a title he never looked like keeping and Nabil to reflect on 22 gameweeks at the top that, by his own squad's numbers, were never quite built to last. For both managers, 26/27 — with its expanded field and new arrivals — represents not just a fresh start, but a chance to answer the only question that matters: was 25/26 a blip, or a pattern?</p>
+        <p>With the league set to expand for 26/27 (more on that elsewhere in this issue), Ammar's entrance adds another genuine contender to an already crowded field. Karrar, fresh off his own vow to chase silverware next season, and Nabil, still nursing the wounds of a Draft League collapse, may find their first major test of the new campaign arriving from somewhere much closer to home than they expected.</p>
+        <p>The All Stars Super League newsroom will have a full profile on Ammar — including his squad-building philosophy and opening transfers — once pre-season draft activity begins.</p>
       </div>
     </article>
-
     <!-- ARTICLE 6 — Omar farewell -->
     <article class="article" id="omar-farewell">
       <div class="article-meta">
@@ -1167,7 +1080,182 @@
         <p>For a league built on rivalries, records and relentless competition, Omar's send-off is a reminder that not every storyline ends with a trophy lift on the big stage — sometimes it ends quietly, with a cup in the cabinet and a new seat in the stands. The All Stars Super League wishes him well, and looks forward to seeing him back among the fans for 26/27.</p>
       </div>
     </article>
+    <!-- ARTICLE 3 — Karrar speech -->
+    <article class="article" id="karrar-vow">
+      <div class="article-meta">
+        <span class="article-tag" style="background:#1a3a8a;">Awards Night</span>
+        <span class="article-date">25/26 · Awards Ceremony</span>
+      </div>
+      <h2>"One for the Future" — and a Promise for Right Now: Karrar's Awards Night Vow</h2>
+      <p class="deck">The league's founder collected individual hardware for the first time in years — and used the moment to put the rest of the table on notice.</p>
 
+      <div class="article-figure">
+        <svg viewBox="0 0 600 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Illustration of a podium with a spotlight and a microphone, with a medal in the foreground">
+          <rect width="600" height="300" fill="#faf8f4"/>
+          <!-- Spotlight cone -->
+          <path d="M300 0 L210 300 L390 300 Z" fill="#C9963A" opacity="0.10"/>
+          <path d="M300 0 L255 300 L345 300 Z" fill="#C9963A" opacity="0.12"/>
+          <!-- Podium -->
+          <g fill="#0e0e0e" opacity="0.08">
+            <rect x="220" y="200" width="160" height="60"/>
+          </g>
+          <rect x="220" y="200" width="160" height="60" fill="none" stroke="#0e0e0e" stroke-width="1.2"/>
+          <text x="300" y="238" font-family="Playfair Display, serif" font-weight="900" font-size="26" fill="#0e0e0e" text-anchor="middle">25/26</text>
+          <!-- Microphone -->
+          <g transform="translate(420,90)">
+            <rect x="-6" y="-30" width="12" height="40" rx="6" fill="#0e0e0e"/>
+            <rect x="-3" y="10" width="6" height="50" fill="#0e0e0e" opacity="0.4"/>
+            <line x1="-3" y1="60" x2="20" y2="60" stroke="#0e0e0e" stroke-width="2" opacity="0.4"/>
+          </g>
+          <!-- Medal -->
+          <g transform="translate(180,90)">
+            <path d="M0 0 L-16 -40 L16 -40 Z" fill="none" stroke="#C9963A" stroke-width="2"/>
+            <circle cx="0" cy="14" r="26" fill="#C9963A" opacity="0.18" stroke="#C9963A" stroke-width="2"/>
+            <text x="0" y="20" font-family="Playfair Display, serif" font-weight="900" font-size="14" fill="#C9963A" text-anchor="middle">OFTF</text>
+          </g>
+          <!-- Sparkles -->
+          <g fill="#C9963A">
+            <circle cx="120" cy="50" r="2.5"/>
+            <circle cx="500" cy="60" r="2"/>
+            <circle cx="470" cy="180" r="2.5"/>
+            <circle cx="100" cy="200" r="2"/>
+          </g>
+        </svg>
+      </div>
+
+      <div class="article-body">
+        <p>For a man widely regarded as the heart and brain of the All Stars Super League, the trophy cabinet has remained — until now — conspicuously bare. That changed on awards night, when <strong>Karrar</strong> was named the winner of <strong>"One for the Future"</strong>, the award recognising the manager showing the most promising development and long-term potential.</p>
+        <p>It's a notable moment for the league's founder. Karrar built the All Stars Super League from a single phone call between two friends into the multi-competition institution it is today, all while continuing to be — by his own admission — one of the league's most tactically literate managers without the silverware to show for it.</p>
+        <div class="pullquote">
+          "I've helped build the stage for everyone else to win on it. That's been fine — I'm proud of that. But I'm not done chasing my own. Next season, I'm coming for a title. Not 'one for the future' — the real thing."
+          <span class="pullquote-cite">— Karrar, Awards Ceremony Speech, 25/26</span>
+        </div>
+        <p>The acceptance speech, delivered to a room that has watched Karrar narrowly miss out on major honours season after season, struck a tone that was as much a rallying cry as it was a thank-you. He acknowledged the rivalries that have defined his seasons — long-running battles with Zain, Nabil, Hameed and Akram — and framed the year ahead as the one where those rivalries finally tip in his favour.</p>
+        <p>It's worth noting that Karrar's <strong>69-point haul</strong> — the joint-highest single-gameweek score in the 25/26 Draft League, shared with Hameed — has long stood as proof of his ceiling. The missing piece, by his own admission, has been turning peak weeks into sustained title challenges.</p>
+        <p>With a new manager arriving in Ammar, an expanded league structure, and Hameed setting the bar at a historic high, Karrar's vow couldn't have come at a more pointed moment. The "One for the Future" award may be the first piece of individual hardware in his cabinet — but after this speech, few in the league will be surprised if it isn't the last.</p>
+      </div>
+    </article>
+    <!-- ARTICLE 5 — Akram/Nabil collapse -->
+    <article class="article" id="title-defence-collapse">
+      <div class="article-meta">
+        <span class="article-tag" style="background:var(--red);">Season Review</span>
+        <span class="article-date">25/26 · Final Review</span>
+      </div>
+      <h2>The Great Collapse: Akram's Title Defence Falters, Nabil's Draft Dream Unravels</h2>
+      <p class="deck">One manager couldn't follow up his maiden title. Another spent 22 gameweeks punching above his weight before the underlying numbers finally caught up. A look back at 25/26's biggest disappointments.</p>
+
+      <div class="article-figure">
+        <svg viewBox="0 0 600 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Illustration of a cracked trophy and a line graph that rises then falls sharply">
+          <rect width="600" height="300" fill="#faf8f4"/>
+          <!-- Grid -->
+          <g stroke="#d8d4ce" stroke-width="1">
+            <line x1="40" y1="60" x2="40" y2="250"/>
+            <line x1="40" y1="250" x2="560" y2="250"/>
+          </g>
+          <!-- GW22 marker -->
+          <line x1="330" y1="60" x2="330" y2="250" stroke="#C9963A" stroke-width="1" stroke-dasharray="4 4" opacity="0.6"/>
+          <text x="330" y="270" font-family="DM Mono, monospace" font-size="10" fill="#7a7a7a" text-anchor="middle">GW 22</text>
+          <!-- Rising then falling line -->
+          <polyline points="40,220 120,180 200,140 280,100 330,90 400,150 470,210 560,235"
+                    fill="none" stroke="var(--red)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="330" cy="90" r="5" fill="var(--red)"/>
+          <text x="330" y="76" font-family="DM Sans, sans-serif" font-size="10" fill="#b03020" text-anchor="middle" font-weight="600">Punching above weight</text>
+          <text x="500" y="226" font-family="DM Sans, sans-serif" font-size="10" fill="#b03020" text-anchor="middle" font-weight="600">Numbers catch up</text>
+          <!-- Cracked trophy -->
+          <g transform="translate(490,90)" fill="none" stroke="#0e0e0e" stroke-width="1.6" opacity="0.55">
+            <path d="M-18 0 h36 v10 a18 18 0 0 1 -36 0 Z"/>
+            <path d="M-18 3 a-12 12 0 0 0 -12 12 a12 12 0 0 0 12 9" />
+            <path d="M18 3 a12 12 0 0 1 12 12 a12 12 0 0 1 -12 9" />
+            <rect x="-6" y="20" width="12" height="10"/>
+            <rect x="-16" y="30" width="32" height="6" rx="1"/>
+          </g>
+          <line x1="478" y1="6" x2="500" y2="34" stroke="var(--red)" stroke-width="2" opacity="0.7"/>
+          <line x1="502" y1="4" x2="486" y2="36" stroke="var(--red)" stroke-width="2" opacity="0.7"/>
+        </svg>
+      </div>
+
+      <div class="article-body">
+        <p>Not every storyline from 25/26 was a celebration. While Hameed swept the board and Karrar earned a place on the podium, two of the league's most established names will look back on the season with frustration — and in one case, genuine heartbreak.</p>
+        <p><strong>Akram</strong>, the reigning Draft League champion from 24/25, came into the season as the man to beat. Instead, his title defence never got going. The same "differential" philosophy that won him his maiden title — bold, against-the-grain selections built on real-world potential — repeatedly backfired, and the season also produced his <strong>longest losing streak of 7 matches</strong>, a sharp contrast to the 24/25 campaign where he shared the league's best win streak. A manager who once turned bold calls into bragging rights instead found those same calls compounding his problems week after week.</p>
+        <p>But if Akram's season was a quiet fade, <strong>Nabil's</strong> was a far louder story altogether. For <strong>22 gameweeks</strong>, Nabil sat at or near the very top of the Draft League table — a remarkable feat for a manager making his full-time debut in the competition. On paper, it looked as though the league's newest full-timer was about to claim one of its biggest prizes at the first attempt.</p>
+        <p>Dig beneath the league position, though, and the shared sentiment among observers — and reportedly among rival managers themselves — was that Nabil was punching well above his weight. By underlying squad quality and total points accumulated, his side's numbers read more like a team destined for 3rd or 4th than one leading the table outright. The consensus was that the position flattered the performance: a manager riding favourable results and matchups to a rank his squad's actual point tallies simply didn't support.</p>
+        <div class="pullquote">
+          "Twenty-two gameweeks at the top doesn't tell the full story. Everyone could see the underlying numbers — the total points just weren't there for a side meant to be leading. It always felt like a 3rd or 4th place team punching above its weight, and eventually the table caught up with that."
+          <span class="pullquote-cite">— League observer, end-of-season review</span>
+        </div>
+        <p>And catch up it did. Nabil's season is now home to two unwanted records: the <strong>lowest single-gameweek score</strong> of the campaign (19 points) and the <strong>longest losing streak in H2H Main</strong> (10 matches) — both consistent with a squad whose underlying numbers had been overdue a reality check long before gameweek 22. The same hyper-reactive, transfer-heavy approach that had masked the gap between position and points eventually became the undoing, with rebuilds compounding rather than correcting the slide.</p>
+        <p>By the time the dust settled, Hameed had swept past both of them on the way to a historic treble, leaving Akram to defend a title he never looked like keeping and Nabil to reflect on 22 gameweeks at the top that, by his own squad's numbers, were never quite built to last. For both managers, 26/27 — with its expanded field and new arrivals — represents not just a fresh start, but a chance to answer the only question that matters: was 25/26 a blip, or a pattern?</p>
+      </div>
+    </article>
+    <!-- ARTICLE 2 — Hameed dominance -->
+    <article class="article" id="hameed-dominance">
+      <div class="article-meta">
+        <span class="article-tag" style="background:var(--gold);">Season Review</span>
+        <span class="article-date">25/26 · Final Review</span>
+      </div>
+      <h2>Hameed's Treble Season: Inside a Record-Breaking Campaign</h2>
+      <p class="deck">Three titles, a host of shattered records, and a campaign that will be discussed for years — the numbers behind the most dominant individual season the league has seen.</p>
+
+      <div class="article-figure">
+        <svg viewBox="0 0 600 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Illustration of an ascending bar chart topped with a crown and three trophies">
+          <rect width="600" height="300" fill="#faf8f4"/>
+          <!-- Ground line -->
+          <line x1="0" y1="250" x2="600" y2="250" stroke="#d8d4ce" stroke-width="1"/>
+          <!-- Bars -->
+          <g>
+            <rect x="90"  y="190" width="46" height="60"  fill="#0e0e0e" opacity="0.10"/>
+            <rect x="180" y="150" width="46" height="100" fill="#0e0e0e" opacity="0.16"/>
+            <rect x="270" y="100" width="46" height="150" fill="#0e0e0e" opacity="0.22"/>
+            <rect x="360" y="60"  width="46" height="190" fill="#C9963A" opacity="0.85"/>
+            <rect x="450" y="35"  width="46" height="215" fill="#C9963A"/>
+          </g>
+          <!-- Crown on top bar -->
+          <g transform="translate(473,18)">
+            <path d="M-20 12 L-12 -8 L-4 6 L0 -12 L4 6 L12 -8 L20 12 Z" fill="#C9963A" stroke="#0e0e0e" stroke-width="1.2" stroke-linejoin="round"/>
+          </g>
+          <!-- Trophy row -->
+          <g transform="translate(120,40)" fill="none" stroke="#0e0e0e" stroke-width="1.4">
+            <path d="M-12 0 h24 v6 a12 12 0 0 1 -24 0 Z"/>
+            <path d="M-12 2 a-8 8 0 0 0 -8 8 a8 8 0 0 0 8 6" />
+            <path d="M12 2 a8 8 0 0 1 8 8 a8 8 0 0 1 -8 6" />
+            <rect x="-4" y="14" width="8" height="6"/>
+            <rect x="-10" y="20" width="20" height="4" rx="1"/>
+          </g>
+          <g transform="translate(160,40)" fill="none" stroke="#0e0e0e" stroke-width="1.4">
+            <path d="M-12 0 h24 v6 a12 12 0 0 1 -24 0 Z"/>
+            <path d="M-12 2 a-8 8 0 0 0 -8 8 a8 8 0 0 0 8 6" />
+            <path d="M12 2 a8 8 0 0 1 8 8 a8 8 0 0 1 -8 6" />
+            <rect x="-4" y="14" width="8" height="6"/>
+            <rect x="-10" y="20" width="20" height="4" rx="1"/>
+          </g>
+          <g transform="translate(200,40)" fill="none" stroke="#0e0e0e" stroke-width="1.4">
+            <path d="M-12 0 h24 v6 a12 12 0 0 1 -24 0 Z"/>
+            <path d="M-12 2 a-8 8 0 0 0 -8 8 a8 8 0 0 0 8 6" />
+            <path d="M12 2 a8 8 0 0 1 8 8 a8 8 0 0 1 -8 6" />
+            <rect x="-4" y="14" width="8" height="6"/>
+            <rect x="-10" y="20" width="20" height="4" rx="1"/>
+          </g>
+          <!-- label -->
+          <text x="473" y="280" font-family="DM Mono, monospace" font-size="11" fill="#7a7a7a" text-anchor="middle" letter-spacing="1">HAMEED</text>
+        </svg>
+      </div>
+
+      <div class="article-body">
+        <p>There are good seasons, there are great seasons, and then there is whatever <strong>Hameed</strong> just produced. By the time the curtain fell on 25/26, the youngest manager in the league had claimed the <strong>Draft League title</strong>, the <strong>H2H Main title</strong>, and the <strong>Classic title</strong> — a clean sweep that the All Stars Super League has never seen from a single manager before.</p>
+        <p>The headline number tells its own story: Hameed spent <strong>35 gameweeks in 1st position</strong> across the Draft League this season — more than triple the previous benchmark, and a tally that effectively turned the title race into a formality for most of the campaign.</p>
+        <div class="stat-strip">
+          <div class="stat-chip"><div class="v">35</div><div class="l">GWs in 1st (Draft)</div></div>
+          <div class="stat-chip"><div class="v">12</div><div class="l">Win streak (Draft)</div></div>
+          <div class="stat-chip"><div class="v">17</div><div class="l">GWs in 1st (H2H Main)</div></div>
+          <div class="stat-chip"><div class="v">9</div><div class="l">Win streak (H2H)</div></div>
+          <div class="stat-chip"><div class="v">110</div><div class="l">Double GW POTW pts</div></div>
+          <div class="stat-chip"><div class="v">3</div><div class="l">Titles in one season</div></div>
+        </div>
+        <p>Even the league's record book had to be rewritten in places. The honorary Double Gameweek Points-on-the-Week mark of <strong>110 points</strong> dwarfs anything seen previously, while a <strong>12-match win streak</strong> in the Draft League put real distance between Hameed and the rest of the chasing pack before most rivals had even settled into the season.</p>
+        <p>What makes the campaign feel especially historic is the context: Hameed remains the youngest entrant in the league's history, and just two seasons removed from his introduction to organised FPL. The trajectory from newcomer to treble-winner, inside such a short window, places this season firmly in "legacy" territory — a campaign that future All Stars seasons will likely be measured against.</p>
+        <p>With three trophies added to his cabinet in a single year and the league heading into an expanded 26/27 season, the obvious question is whether anyone can find an answer before Hameed's dominance becomes the new normal.</p>
+      </div>
+    </article>
     <!-- FOOTER -->
     <footer class="footer">
       <div class="serif footer-brand">All Stars Super League</div>
