@@ -573,6 +573,8 @@
       display: flex; flex-direction: column; align-items: center; justify-content: center;
       text-align: center;
       opacity: 0;
+      padding: 0 20px;
+      box-sizing: border-box;
       animation: nsCenterIn 0.4s ease-out 0.75s forwards;
     }
     @keyframes nsCenterIn { to { opacity: 1; } }
@@ -585,17 +587,20 @@
       animation: nsFadeUp 0.5s ease-out 1.5s forwards;
     }
     .ns-title {
-      display: flex; gap: 18px; line-height: 1;
+      display: flex; flex-wrap: nowrap; justify-content: center; align-items: baseline;
+      gap: 18px; line-height: 1;
+      width: 100%; max-width: 100%;
     }
     .ns-title-line {
       font-family: 'Playfair Display', serif; font-weight: 900;
-      font-size: clamp(56px, 14vw, 130px);
+      font-size: clamp(34px, 13vw, 130px);
       color: #fff;
       letter-spacing: -.02em;
       display: inline-block;
       transform: scale(2.6);
       opacity: 0;
       text-shadow: 0 0 40px rgba(192,57,32,.5);
+      white-space: nowrap;
     }
     .ns-title-1 { animation: nsTitleSmash 0.55s cubic-bezier(.16,1,.3,1) 0.78s forwards; }
     .ns-title-2 { color: #c0392b; animation: nsTitleSmash 0.55s cubic-bezier(.16,1,.3,1) 0.88s forwards; }
@@ -651,9 +656,15 @@
     @keyframes nsBlinkSlow { 0%,100%{opacity:.3} 50%{opacity:.65} }
 
     @media (max-width: 520px) {
-      .ns-title { gap: 10px; }
+      .ns-title { gap: 8px; }
+      .ns-title-line { font-size: clamp(28px, 12vw, 56px); }
       .ns-ticker { height: 30px; }
       .ns-ticker-track { font-size: 9px; }
+    }
+
+    @media (max-width: 360px) {
+      .ns-title-line { font-size: clamp(22px, 11vw, 44px); }
+      .ns-kicker { font-size: 9px; letter-spacing: .22em; }
     }
   </style>
 
