@@ -69,8 +69,14 @@
       display: inline-flex; align-items: center; gap: 6px;
       font-size: 10px; font-weight: 500; letter-spacing: .08em; text-transform: uppercase;
       padding: 3px 10px; border-radius: 2px;
-      border: .5px solid rgba(201,150,58,.45); color: var(--gold); background: rgba(201,150,58,.06);
+      border: .5px solid rgba(176,48,32,.45); color: var(--red); background: rgba(176,48,32,.07);
     }
+    .soon-pill .live-orb {
+      width: 7px; height: 7px; border-radius: 50%; background: var(--red); flex-shrink: 0;
+      box-shadow: 0 0 6px 2px rgba(176,48,32,.55);
+      animation: orbPulse 1.3s ease-in-out infinite;
+    }
+    @keyframes orbPulse { 0%,100%{opacity:1;box-shadow:0 0 6px 2px rgba(176,48,32,.55)} 50%{opacity:.6;box-shadow:0 0 10px 4px rgba(176,48,32,.3)} }
     /* Tagline */
     .tagline-bar {
       padding: 18px 0 0;
@@ -486,6 +492,7 @@
     <!-- Bottom ticker -->
     <div class="ns-ticker">
       <div class="ns-ticker-track">
+        <span>JAD &amp; AMMAR: NEW FACES, OPPOSITE ENERGY</span><span class="ns-dot">●</span>
         <span>WORLD CUP PREDICTIONS HEAT UP THE LEAGUE</span><span class="ns-dot">●</span>
         <span>ZAIN'S EXPLOSIVE SEASON REVIEW</span><span class="ns-dot">●</span>
         <span>26/27 SEASON PREVIEW</span><span class="ns-dot">●</span>
@@ -789,7 +796,7 @@
         <a href="index.html">Home</a>
       </div>
       <div class="nav-live" style="gap:10px;">
-        <div class="soon-pill">26/27 Season Coming Soon</div>
+        <div class="soon-pill"><span class="live-orb"></span>Season 26/27 Live</div>
       <div class="nav-menu" id="navMenu">
         <button class="nav-menu-btn" id="navMenuBtn" aria-haspopup="true" aria-expanded="false">
           Menu
@@ -819,12 +826,113 @@
       <hr class="rule">
     </header>
 
+    <!-- ARTICLE: Jad & Ammar — New Managers -->
+    <article class="article" id="jad-ammar-arrivals">
+      <div class="article-meta">
+        <span class="article-tag" style="background:#1a3a8a;">New Arrivals</span>
+        <span class="article-date">26/27 Season · Squad News</span>
+        <span class="just-in-badge"><span class="jd"></span>Just In</span>
+      </div>
+      <h2>One a Natural Fit, One a Walking Powder Keg: Meet the All Stars Super League's Newest Faces</h2>
+      <p class="deck">The 26/27 season brings two new managers through the door — and they couldn't be more different. Jad arrives with a football brain and an easy rapport. Ammar arrives with a reputation that already precedes him.</p>
+
+      <div class="article-figure">
+        <svg viewBox="0 0 600 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Illustration of two contrasting figures — one relaxed and welcoming, one with arms crossed and a warning symbol above">
+          <rect width="600" height="300" fill="#faf8f4"/>
+          <!-- Dividing line down the middle -->
+          <line x1="300" y1="30" x2="300" y2="270" stroke="#d8d4ce" stroke-width="1" stroke-dasharray="6 4"/>
+
+          <!-- LEFT SIDE — JAD (calm, welcoming) -->
+          <!-- Background glow -->
+          <circle cx="150" cy="150" r="95" fill="#1a3a8a" opacity="0.05"/>
+          <!-- Figure -->
+          <g transform="translate(150,155)">
+            <ellipse cx="0" cy="68" rx="28" ry="7" fill="#0e0e0e" opacity="0.08"/>
+            <rect x="-14" y="-6" width="28" height="50" rx="7" fill="#1a3a8a" opacity="0.85"/>
+            <circle cx="0" cy="-24" r="16" fill="#d4956a"/>
+            <!-- Friendly open arms -->
+            <line x1="-14" y1="10" x2="-38" y2="2" stroke="#1a3a8a" stroke-width="7" stroke-linecap="round" opacity="0.85"/>
+            <line x1="14" y1="10" x2="38" y2="2" stroke="#1a3a8a" stroke-width="7" stroke-linecap="round" opacity="0.85"/>
+            <line x1="-14" y1="44" x2="-10" y2="70" stroke="#0e0e0e" stroke-width="5" stroke-linecap="round" opacity="0.5"/>
+            <line x1="14" y1="44" x2="10" y2="70" stroke="#0e0e0e" stroke-width="5" stroke-linecap="round" opacity="0.5"/>
+          </g>
+          <!-- Real Madrid crest hint -->
+          <circle cx="130" cy="200" r="10" fill="none" stroke="#C9963A" stroke-width="1.5" opacity="0.7"/>
+          <path d="M130 192 l2 6 l6 0 l-5 4 l2 6 l-5-4 l-5 4 l2-6 l-5-4 l6 0 Z" fill="#C9963A" opacity="0.7"/>
+          <!-- "JAD" label -->
+          <text x="150" y="268" font-family="Playfair Display, serif" font-weight="900" font-size="18" fill="#1a3a8a" text-anchor="middle" opacity="0.7">JAD</text>
+          <text x="150" y="282" font-family="DM Mono, monospace" font-size="9" fill="#7a7a7a" text-anchor="middle" letter-spacing="1">NATURAL FIT</text>
+
+          <!-- RIGHT SIDE — AMMAR (tense, arms crossed) -->
+          <circle cx="450" cy="150" r="95" fill="#b03020" opacity="0.05"/>
+          <!-- Figure -->
+          <g transform="translate(450,155)">
+            <ellipse cx="0" cy="68" rx="28" ry="7" fill="#0e0e0e" opacity="0.08"/>
+            <rect x="-14" y="-6" width="28" height="50" rx="7" fill="#b03020" opacity="0.85"/>
+            <circle cx="0" cy="-24" r="16" fill="#d4956a"/>
+            <!-- Arms crossed -->
+            <path d="M-14 14 Q-28 20 -32 14 Q-28 8 -14 14" stroke="#b03020" stroke-width="7" stroke-linecap="round" fill="none" opacity="0.85"/>
+            <path d="M14 14 Q28 20 32 14 Q28 8 14 14" stroke="#b03020" stroke-width="7" stroke-linecap="round" fill="none" opacity="0.85"/>
+            <path d="M-30 14 Q0 18 30 14" stroke="#b03020" stroke-width="5" stroke-linecap="round" fill="none" opacity="0.7"/>
+            <line x1="-14" y1="44" x2="-10" y2="70" stroke="#0e0e0e" stroke-width="5" stroke-linecap="round" opacity="0.5"/>
+            <line x1="14" y1="44" x2="10" y2="70" stroke="#0e0e0e" stroke-width="5" stroke-linecap="round" opacity="0.5"/>
+          </g>
+          <!-- Warning triangle -->
+          <g transform="translate(450,60)">
+            <path d="M0 -18 L22 16 L-22 16 Z" fill="#b03020" opacity="0.15" stroke="#b03020" stroke-width="1.8" stroke-linejoin="round"/>
+            <line x1="0" y1="-8" x2="0" y2="4" stroke="#b03020" stroke-width="2.5" stroke-linecap="round"/>
+            <circle cx="0" cy="10" r="1.8" fill="#b03020"/>
+          </g>
+          <!-- Rage lines -->
+          <g stroke="#b03020" stroke-width="1.2" opacity="0.35">
+            <line x1="395" y1="115" x2="382" y2="108"/>
+            <line x1="393" y1="125" x2="378" y2="122"/>
+            <line x1="505" y1="115" x2="518" y2="108"/>
+            <line x1="507" y1="125" x2="522" y2="122"/>
+          </g>
+          <!-- "AMMAR" label -->
+          <text x="450" y="268" font-family="Playfair Display, serif" font-weight="900" font-size="18" fill="#b03020" text-anchor="middle" opacity="0.7">AMMAR</text>
+          <text x="450" y="282" font-family="DM Mono, monospace" font-size="9" fill="#7a7a7a" text-anchor="middle" letter-spacing="1">POWDER KEG</text>
+        </svg>
+      </div>
+
+      <div class="article-body">
+
+        <p>The All Stars Super League enters 26/27 with two new faces in the dugout. They both bring FPL credentials. They both arrive with histories — some with the league's existing managers, some yet to play out. Beyond that, the similarities end abruptly.</p>
+
+        <h3 style="font-family:'Playfair Display',serif;font-size:18px;font-weight:700;margin:22px 0 8px;border-left:3px solid #1a3a8a;padding-left:12px;">Jad: The Right Kind of New</h3>
+
+        <p>There's a version of a new signing that walks in and just fits — no friction, no awkward adjustment period, no sense that the group has to work to accommodate them. <strong>Jad</strong> is that version.</p>
+        <p>A genuine football person through and through, Jad carries the dual loyalties of a <strong>Real Madrid</strong> fan and a <strong>Manchester United</strong> supporter — a combination that either speaks to an admirably broad love of football or an impressively high tolerance for heartbreak, depending on how you look at it. Either way, it signals someone who lives and breathes the game rather than just tracking it for FPL returns.</p>
+        <p>His entry into the group has been telling. He already shares history with <strong>Akram</strong> from outside the league, and from the early signals it sounds like the chemistry was immediate — a case of two people who think about football in compatible ways finding each other in the same room. The rest of the managers, by most accounts, warmed to him quickly too.</p>
+        <div class="pullquote" style="border-left-color:#1a3a8a;">
+          "He just gets it. First conversation and you can tell he knows football. No learning curve needed."
+          <span class="pullquote-cite">— A league source, on Jad's arrival</span>
+        </div>
+        <p>His FPL history suggests he's not just here to make up the numbers either. Jad arrives with a respectable track record — the kind that doesn't shout about itself but tends to hold up over the course of a long season when the flashier approaches have already started to fray. All Stars Super League is getting a serious addition. The 26/27 table will be more interesting for it.</p>
+
+        <h3 style="font-family:'Playfair Display',serif;font-size:18px;font-weight:700;margin:22px 0 8px;border-left:3px solid #b03020;padding-left:12px;">Ammar: The Complicated One</h3>
+
+        <p>Then there's <strong>Ammar</strong>.</p>
+        <p>Ammar has been discussed in these pages before — flagged as a known quantity by both Karrar and Nabil from ventures outside football, described with the kind of careful language people use when they're not sure whether to say "competitive" or "volatile." Having now had the chance to observe him closer up, this report is less careful.</p>
+        <p>Ammar is childish. That's not a character assassination — it's an accurate description of a pattern that's already establishing itself before the season has even kicked off. The clearest expression of it: when things don't go his way, or when an outcome doesn't match what he wanted, or when a tension flares — his immediate response is to threaten to leave the competition. Not to engage with it, not to push back and work through it, but to pick up the ball and declare he's going home.</p>
+        <div class="pullquote" style="border-left-color:#b03020;">
+          "Every time something doesn't go his way you hear the same thing — he's out, he's done, he's leaving. We've heard it multiple times already and we haven't played a gameweek."
+          <span class="pullquote-cite">— A participant, speaking on condition of anonymity</span>
+        </div>
+        <p>His tensions with <strong>Nabil</strong> are the most prominently documented, and in fairness to the reporting here, that's partly because they're the loudest. But they are not isolated. Ammar has managed to rub against the grain with more than one manager in a short space of time — a talent that, in a league built on banter and long-term rivalries, takes some doing to achieve before you've even registered your first transfer.</p>
+        <p>The short temper is compounded by short-sightedness. It's not just that Ammar reacts quickly — it's that he reacts to the immediate moment without the context of what preceded it or what follows. A result that displeases him feels, in that instant, like a catastrophe warranting a walkout. By most accounts he has yet to demonstrate the capacity to zoom out and see the season for what it is: a long, grinding, deeply satisfying exercise in delayed gratification that requires a certain patience he does not appear to currently possess.</p>
+        <p>None of which is to say he won't surprise everyone. Ammar enters the 26/27 World Cup predictions minigame sitting at the top of the leaderboard alongside Anshal — so the talent is clearly there. What remains to be seen is whether, over the course of a full FPL season with its inevitable rough patches, he can hold himself together long enough to let that talent do the talking.</p>
+        <p>The All Stars Super League has room for all personalities. It's a richer league for having Jad in it. Whether it's a better or more chaotic one for having Ammar in it is a question 26/27 will answer in full — probably loudly, probably dramatically, and probably with at least one threatened resignation that nobody quite takes seriously anymore.</p>
+
+      </div>
+    </article>
+
     <!-- ARTICLE -1 — World Cup predictions minigame (NEWEST) -->
     <article class="article" id="world-cup-predictions">
       <div class="article-meta">
         <span class="article-tag" style="background:#0a7a4b;">Off-Season Fun</span>
         <span class="article-date">World Cup · Live Standings</span>
-        <span class="just-in-badge"><span class="jd"></span>Just In</span>
       </div>
       <h2>World Cup Heat Has Arrived in All Stars Super League as Managers Take On Predictions Minigame</h2>
       <p class="deck">With the World Cup in full swing, eight familiar names have traded their FPL squads for prediction slips — and two unexpected names are leading the table.</p>
