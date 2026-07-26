@@ -68,8 +68,14 @@
       display: inline-flex; align-items: center; gap: 6px;
       font-size: 10px; font-weight: 500; letter-spacing: .08em; text-transform: uppercase;
       padding: 3px 10px; border-radius: 2px;
-      border: .5px solid rgba(201,150,58,.45); color: var(--gold); background: rgba(201,150,58,.06);
+      border: .5px solid rgba(176,48,32,.45); color: var(--red); background: rgba(176,48,32,.07);
     }
+    .soon-pill .live-orb {
+      width: 7px; height: 7px; border-radius: 50%; background: var(--red); flex-shrink: 0;
+      box-shadow: 0 0 6px 2px rgba(176,48,32,.55);
+      animation: orbPulse 1.3s ease-in-out infinite;
+    }
+    @keyframes orbPulse { 0%,100%{opacity:1;box-shadow:0 0 6px 2px rgba(176,48,32,.55)} 50%{opacity:.6;box-shadow:0 0 10px 4px rgba(176,48,32,.3)} }
     /* Tagline */
     .tagline-bar {
       padding: 18px 0 0;
@@ -683,7 +689,7 @@
         <a href="#managers">Managers</a>
       </div>
       <div class="nav-live" style="gap:10px;">
-        <div class="soon-pill">26/27 Season Coming Soon</div>
+        <div class="soon-pill"><span class="live-orb"></span>Season 26/27 Live</div>
       <div class="nav-menu" id="navMenu">
         <button class="nav-menu-btn" id="navMenuBtn" aria-haspopup="true" aria-expanded="false">
           <span>Menu</span>
@@ -717,7 +723,7 @@
         </div>
         <div class="masthead-right">
           <div class="gold-rule"></div>
-          <div class="soon-pill" style="margin-bottom:6px;">26/27 Season Coming Soon</div>
+          <div class="soon-pill" style="margin-bottom:6px;"><span class="live-orb"></span>Season 26/27 Live</div>
           <div class="mono" style="font-size:10px;color:var(--ink-3);margin-top:5px;">Records 2024/25 &amp; 2025/26</div>
         </div>
               </div><!-- /masthead-grid -->
@@ -969,7 +975,7 @@
     <!-- FOOTER -->
     <footer class="footer">
       <div class="serif footer-brand">All Stars Super League</div>
-      <div class="mono" style="font-size:10px;color:var(--ink-3);">Season 25/26 concluded — 26/27 coming soon</div>
+      <div class="mono" style="font-size:10px;color:var(--ink-3);">Season 26/27 Live</div>
     </footer>
 
   </div><!-- /page -->
