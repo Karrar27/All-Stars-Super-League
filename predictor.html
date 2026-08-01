@@ -260,6 +260,7 @@
       <div class="si">🏅</div>
       <h2 class="serif">Locked in!</h2>
       <p>Your prediction has been saved. Predict again with the same name any time to update it.</p>
+      <p id="success-storage-note" style="font-size:12px;margin-top:-8px;margin-bottom:20px;max-width:420px;margin-left:auto;margin-right:auto;line-height:1.6;padding:10px 14px;border-radius:6px;background:var(--bg-2);border:.5px solid var(--rt);"></p>
       <div class="action-row">
         <button class="btn btn-gold" onclick="showBoard()">📋 See all predictions</button>
         <button class="btn btn-outline" onclick="startPredictor()">✏️ Edit my prediction</button>
@@ -276,6 +277,9 @@
         <h2 class="serif" style="font-size:22px;font-weight:700;margin-top:4px;">What everyone picked</h2>
       </div>
       <button class="btn btn-outline" onclick="showSc('sc-name')">← Back</button>
+    </div>
+    <div id="cloud-banner" style="display:none;margin-bottom:16px;padding:10px 14px;border-radius:6px;background:#fff8e6;border:.5px solid rgba(201,150,58,.4);font-size:12px;color:var(--ink-2);line-height:1.6;">
+      ⚠️ <strong>Cloud storage not yet configured.</strong> Showing predictions saved on this device only. To make everyone's picks visible across all devices, Karrar needs to add a free JSONBin API key — see the setup instructions at the top of predictor.html.
     </div>
     <div id="board-wrap"></div>
   </div>
@@ -633,12 +637,71 @@ function updateProgress(){
   tc.className='ctab'+(pred.cup.fin.winner?' done':'')+(tcActive?' active':'');
 }
 
-// ── Storage ──────────────────────────────────────
-function loadAll(){
-  try{return JSON.parse(localStorage.getItem('assl_preds_v3')||'[]');}catch(e){return [];}
+// ══════════════════════════════════════════════════════════════
+//  ASSL PREDICTOR — SHARED STORAGE CONFIGURATION
+//  ─────────────────────────────────────────────
+//  To make predictions visible to EVERYONE across all devices:
+//
+//  1. Go to https://jsonbin.io  (free account)
+//  2. Create a new BIN — set it to PUBLIC — paste [] as content
+//  3. Copy the BIN ID (looks like: 6849f2e28960c335a898b3d2)
+//  4. Create an API key in Account > API Keys
+//  5. Paste both below and re-upload predictor.html to GitHub
+//
+//  Until configured, predictions are saved locally on each device only.
+// ══════════════════════════════════════════════════════════════
+var JSONBIN_BIN_ID  = '6a6e65b4f5f4af5e29df4895';
+var JSONBIN_API_KEY = '$2a$10$AiOISbt5w4wnsr46Hxts8.o1roiuBbFzKFV.TAv./Nqnsos0TrRTm';
+
+// ── Storage: cloud (JSONBin) with localStorage fallback ──────
+var STORAGE_KEY = 'assl_preds_v4';
+
+function isConfigured(){
+  return JSONBIN_BIN_ID.length > 10 && JSONBIN_API_KEY.length > 10;
 }
-function saveAll(data){
-  try{localStorage.setItem('assl_preds_v3',JSON.stringify(data));}catch(e){}
+
+function loadAll(cb){
+  if(!isConfigured()){
+    // LocalStorage only
+    var local = [];
+    try{ local = JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]'); }catch(e){}
+    cb(local);
+    return;
+  }
+  fetch('https://api.jsonbin.io/v3/b/'+JSONBIN_BIN_ID+'/latest',{
+    headers:{'X-Master-Key': JSONBIN_API_KEY, 'X-Bin-Meta':'false'}
+  })
+  .then(function(r){ return r.json(); })
+  .then(function(data){
+    var arr = Array.isArray(data) ? data : [];
+    try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(arr)); }catch(e){}
+    cb(arr);
+  })
+  .catch(function(){
+    var local = [];
+    try{ local = JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]'); }catch(e){}
+    cb(local);
+  });
+}
+
+function saveAll(data, onDone){
+  // Always save locally
+  try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); }catch(e){}
+
+  if(!isConfigured()){
+    if(onDone) onDone(false); // false = cloud not saved
+    return;
+  }
+  fetch('https://api.jsonbin.io/v3/b/'+JSONBIN_BIN_ID,{
+    method:'PUT',
+    headers:{
+      'Content-Type':'application/json',
+      'X-Master-Key': JSONBIN_API_KEY
+    },
+    body: JSON.stringify(data)
+  })
+  .then(function(r){ if(onDone) onDone(r.ok); })
+  .catch(function(){ if(onDone) onDone(false); });
 }
 
 // ── Start predictor ──────────────────────────────
@@ -660,58 +723,96 @@ function startPredictor(){
 // ── Submit ───────────────────────────────────────
 function submitPred(){
   if(!currentName) return;
-  var all=loadAll();
-  var idx=all.findIndex(function(p){return p.name===currentName;});
-  var ts=new Date();
-  var dateStr=ts.getDate()+' '+(ts.toLocaleString('default',{month:'short'}))+' '+ts.getFullYear();
-  var entry={name:currentName, date:dateStr, pred:JSON.parse(JSON.stringify(pred))};
-  if(idx>=0) all[idx]=entry; else all.push(entry);
-  saveAll(all);
-  showSc('sc-success');
+  var btn = document.querySelector('[onclick="submitPred()"]');
+  if(btn){ btn.textContent = '⏳ Saving…'; btn.disabled = true; }
+
+  loadAll(function(all){
+    var idx = all.findIndex(function(p){ return p.name === currentName; });
+    var ts = new Date();
+    var dateStr = ts.getDate()+' '+(ts.toLocaleString('default',{month:'short'}))+' '+ts.getFullYear();
+    var entry = {name:currentName, date:dateStr, pred:JSON.parse(JSON.stringify(pred))};
+    if(idx >= 0) all[idx] = entry; else all.push(entry);
+
+    saveAll(all, function(cloudOk){
+      if(btn){ btn.textContent = '🏅 Submit my prediction'; btn.disabled = false; }
+      // Store whether cloud is configured for success screen message
+      window._lastSaveCloud = cloudOk;
+      showSc('sc-success');
+      // Update success message
+      var msg = document.getElementById('success-storage-note');
+      if(msg){
+        if(isConfigured() && cloudOk){
+          msg.innerHTML = '✅ <strong>Saved to the cloud</strong> — visible to everyone in the group.';
+          msg.style.color = '#0a7a4b';
+        } else {
+          msg.innerHTML = '⚠️ <strong>Saved locally on this device only.</strong> To share predictions with the group, Karrar needs to configure the cloud storage — see the setup comment at the top of predictor.html.';
+          msg.style.color = 'var(--ink-3)';
+        }
+      }
+    });
+  });
 }
 
 // ── Board ─────────────────────────────────────────
 function showBoard(){
-  var all=loadAll();
-  var wrap=document.getElementById('board-wrap');
-  if(!all.length){
-    wrap.innerHTML='<div class="empty"><div class="ei">🗳️</div><p style="font-size:14px;margin-top:8px;">No predictions yet — be the first!</p><br><button class="btn btn-dark" onclick="showSc(\'sc-name\')">Make a prediction</button></div>';
-  } else {
-    wrap.innerHTML='';
-    all.slice().sort(function(a,b){return a.name.localeCompare(b.name);}).forEach(function(entry){
-      var p=entry.pred;
-      // Build board card
-      var leagueSections=['classic','h2h','draft'].map(function(comp){
+  showSc('sc-board');
+  var banner = document.getElementById('cloud-banner');
+  if(banner) banner.style.display = isConfigured() ? 'none' : 'block';
+  var wrap = document.getElementById('board-wrap');
+  wrap.innerHTML = '<div class="empty"><div class="ei" style="font-size:36px;">⏳</div><p style="font-size:14px;margin-top:8px;">'+(isConfigured()?'Loading predictions from the cloud…':'Loading local predictions…')+'</p></div>';
+
+  loadAll(function(all){
+    wrap.innerHTML = '';
+
+    // Refresh + count bar
+    var meta = document.createElement('div');
+    meta.style.cssText = 'margin-bottom:16px;display:flex;justify-content:space-between;align-items:center;';
+    meta.innerHTML =
+      '<span style="font-size:13px;color:var(--ink-3);">'+(all.length||'No')+' prediction'+(all.length!==1?'s':'')+' submitted</span>'+
+      '<button class="btn btn-outline" onclick="showBoard()" style="font-size:12px;padding:7px 14px;">↻ Refresh</button>';
+    wrap.appendChild(meta);
+
+    if(!all.length){
+      var empty = document.createElement('div');
+      empty.className = 'empty';
+      empty.innerHTML = '<div class="ei">🗳️</div><p style="font-size:14px;margin-top:8px;">No predictions yet — be the first!</p><br><button class="btn btn-dark" onclick="showSc(\'sc-name\')">Make a prediction</button>';
+      wrap.appendChild(empty);
+      return;
+    }
+
+    all.slice().sort(function(a,b){ return a.name.localeCompare(b.name); }).forEach(function(entry){
+      var p = entry.pred;
+      var leagueSections = ['classic','h2h','draft'].map(function(comp){
         return '<div class="bcomp-title">'+COMP_LABELS[comp]+'</div>'+
-          (p[comp]||MANAGERS.map(function(m){return m.name;})).map(function(name,idx){
-            var mgr=MANAGERS.find(function(m){return m.name===name;})||{emoji:'?'};
+          (p[comp]||MANAGERS.map(function(m){ return m.name; })).map(function(name,idx){
+            var mgr = MANAGERS.find(function(m){ return m.name===name; })||{emoji:'?'};
             return '<div class="brank-row">'+
               '<div class="bpos'+(idx===0?' g':'')+'">'+(idx+1)+'</div>'+
-              '<div style="font-size:20px;margin-right:4px;">'+mgr.emoji+'</div>'+
+              '<div style="font-size:18px;margin-right:5px;">'+mgr.emoji+'</div>'+
               '<div style="font-size:14px;">'+name+'</div>'+
             '</div>';
           }).join('');
       }).join('');
 
-      var cupSection='<div class="bcomp-title">Cup Bracket</div>';
-      var cup=p.cup;
+      var cupSection = '<div class="bcomp-title">Cup Bracket</div>';
+      var cup = p.cup;
       if(cup && cup.fin && cup.fin.winner){
         cup.qf.forEach(function(qf,i){
           if(qf.m1||qf.m2){
-            cupSection+='<div class="bcup-row">QF'+(i+1)+': <strong>'+(qf.m1||'?')+'</strong> vs <strong>'+(qf.m2||'?')+'</strong>'+(qf.winner?' → 🏆 '+qf.winner+' ('+(qf.s1||'?')+' – '+(qf.s2||'?')+'pts)':'')+'</div>';
+            cupSection += '<div class="bcup-row">QF'+(i+1)+': <strong>'+(qf.m1||'?')+'</strong> vs <strong>'+(qf.m2||'?')+'</strong>'+(qf.winner?' → 🏆 '+qf.winner+' ('+(qf.s1||'?')+' – '+(qf.s2||'?')+' pts)':'')+'</div>';
           }
         });
         cup.sf.forEach(function(sf,i){
-          if(sf.winner) cupSection+='<div class="bcup-row">SF'+(i+1)+' winner: <strong>'+sf.winner+'</strong> ('+(sf.s1||'?')+' – '+(sf.s2||'?')+' pts)</div>';
+          if(sf.winner) cupSection += '<div class="bcup-row">SF'+(i+1)+' winner: <strong>'+sf.winner+'</strong> ('+(sf.s1||'?')+' – '+(sf.s2||'?')+' pts)</div>';
         });
-        cupSection+='<div class="bcup-row" style="font-weight:700;color:var(--gold);">🏆 Cup winner: '+cup.fin.winner+' ('+(cup.fin.s1||'?')+' – '+(cup.fin.s2||'?')+' pts)</div>';
+        cupSection += '<div class="bcup-row" style="font-weight:700;color:var(--gold);">🏆 Cup winner: '+cup.fin.winner+' ('+(cup.fin.s1||'?')+' – '+(cup.fin.s2||'?')+' pts)</div>';
       } else {
-        cupSection+='<div class="bcup-row" style="color:var(--ink-3);">Cup bracket not completed</div>';
+        cupSection += '<div class="bcup-row" style="color:var(--ink-3);">Cup bracket not completed</div>';
       }
 
-      var card=document.createElement('div');
-      card.className='bcard';
-      card.innerHTML=
+      var card = document.createElement('div');
+      card.className = 'bcard';
+      card.innerHTML =
         '<div class="bcard-hdr" onclick="toggleCard(this)">'+
           '<div><div class="bcard-name serif">'+entry.name+'</div><div class="bcard-meta">Submitted '+entry.date+'</div></div>'+
           '<div class="btog">+ expand</div>'+
@@ -719,8 +820,7 @@ function showBoard(){
         '<div class="bcard-body">'+leagueSections+cupSection+'</div>';
       wrap.appendChild(card);
     });
-  }
-  showSc('sc-board');
+  });
 }
 
 function toggleCard(hdr){
