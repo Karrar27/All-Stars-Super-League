@@ -707,17 +707,22 @@ function saveAll(data, onDone){
 // ── Start predictor ──────────────────────────────
 function startPredictor(){
   if(!currentName) return;
-  var all=loadAll();
-  var existing=all.find(function(p){return p.name===currentName;});
-  pred = existing ? JSON.parse(JSON.stringify(existing.pred)) : freshPred();
-  document.getElementById('pred-lbl').textContent=currentName;
-  buildRankList('classic');
-  buildRankList('h2h');
-  buildRankList('draft');
-  buildQF(); buildSF(); buildFin();
-  updateProgress();
-  switchTab('classic');
-  showSc('sc-pred');
+  var btn = document.getElementById('btn-start');
+  if(btn){ btn.textContent = 'Loading…'; btn.disabled = true; }
+
+  loadAll(function(all){
+    if(btn){ btn.textContent = 'Start predicting →'; btn.disabled = false; }
+    var existing = all.find(function(p){ return p.name === currentName; });
+    pred = existing ? JSON.parse(JSON.stringify(existing.pred)) : freshPred();
+    document.getElementById('pred-lbl').textContent = currentName;
+    buildRankList('classic');
+    buildRankList('h2h');
+    buildRankList('draft');
+    buildQF(); buildSF(); buildFin();
+    updateProgress();
+    switchTab('classic');
+    showSc('sc-pred');
+  });
 }
 
 // ── Submit ───────────────────────────────────────
