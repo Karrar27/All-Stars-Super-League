@@ -149,6 +149,12 @@
 
     footer{border-top:1.5px solid var(--rule);padding:20px 0 8px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-top:40px;}
 
+    /* WHATSAPP SHARE */
+    .btn-wa{background:#25D366;color:#fff;border-color:#25D366;}
+    .btn-wa:hover{background:#1ebe5a;}
+    .card-share{background:transparent;border:.5px solid var(--rt);border-radius:4px;padding:5px 10px;font-size:11px;font-weight:600;color:var(--ink-2);cursor:pointer;font-family:'DM Sans',sans-serif;display:inline-flex;align-items:center;gap:5px;transition:all .15s;}
+    .card-share:hover{border-color:#25D366;color:#1ebe5a;background:rgba(37,211,102,.06);}
+
     @media(max-width:580px){
       .nav-links{display:none;}
       .brow{grid-template-columns:1fr;gap:6px;}
@@ -262,6 +268,7 @@
       <p>Your prediction has been saved. Predict again with the same name any time to update it.</p>
       <p id="success-storage-note" style="font-size:12px;margin-top:-8px;margin-bottom:20px;max-width:420px;margin-left:auto;margin-right:auto;line-height:1.6;padding:10px 14px;border-radius:6px;background:var(--bg-2);border:.5px solid var(--rt);"></p>
       <div class="action-row">
+        <button class="btn btn-wa" onclick="shareToWhatsApp(currentName)">📤 Share to WhatsApp</button>
         <button class="btn btn-gold" onclick="showBoard()">📋 See all predictions</button>
         <button class="btn btn-outline" onclick="startPredictor()">✏️ Edit my prediction</button>
         <button class="btn btn-outline" onclick="showSc('sc-name')">← Home</button>
@@ -277,9 +284,6 @@
         <h2 class="serif" style="font-size:22px;font-weight:700;margin-top:4px;">What everyone picked</h2>
       </div>
       <button class="btn btn-outline" onclick="showSc('sc-name')">← Back</button>
-    </div>
-    <div id="cloud-banner" style="display:none;margin-bottom:16px;padding:10px 14px;border-radius:6px;background:#fff8e6;border:.5px solid rgba(201,150,58,.4);font-size:12px;color:var(--ink-2);line-height:1.6;">
-      ⚠️ <strong>Cloud storage not yet configured.</strong> Showing predictions saved on this device only. To make everyone's picks visible across all devices, Karrar needs to add a free JSONBin API key — see the setup instructions at the top of predictor.html.
     </div>
     <div id="board-wrap"></div>
   </div>
@@ -638,69 +642,19 @@ function updateProgress(){
 }
 
 // ══════════════════════════════════════════════════════════════
-//  ASSL PREDICTOR — SHARED CLOUD STORAGE (JSONBin.io)
+//  ASSL PREDICTOR — LOCAL STORAGE (per-device) + WHATSAPP SHARING
 // ══════════════════════════════════════════════════════════════
-var JSONBIN_BIN_ID  = '6a6e65b4f5f4af5e29df4895';
-var JSONBIN_API_KEY = '$2a$10$AiOISbt5w4wnsr46Hxts8.o1roiuBbFzKFV.TAv./Nqnsos0TrRTm';
-
 var STORAGE_KEY = 'assl_preds_v4';
-var _cloudWorking = null; // null=untested, true=ok, false=failed
 
-function isConfigured(){
-  return JSONBIN_BIN_ID.length > 10 && JSONBIN_API_KEY.length > 10;
-}
-
+// loadAll/saveAll keep their async-callback shape so the rest of the
+// app doesn't need to change, but they're just plain localStorage now.
 function loadAll(cb){
-  if(!isConfigured()){
-    cb(_localLoad()); return;
-  }
-  fetch('https://api.jsonbin.io/v3/b/' + JSONBIN_BIN_ID + '/latest', {
-    method: 'GET',
-    headers: {
-      'X-Master-Key': JSONBIN_API_KEY,
-      'X-Bin-Meta': 'false'
-    }
-  })
-  .then(function(r){
-    if(!r.ok) throw new Error('HTTP ' + r.status);
-    return r.json();
-  })
-  .then(function(data){
-    var arr = Array.isArray(data) ? data : (data && Array.isArray(data.record) ? data.record : []);
-    _localSave(arr);
-    _cloudWorking = true;
-    cb(arr);
-  })
-  .catch(function(err){
-    console.warn('JSONBin load failed:', err);
-    _cloudWorking = false;
-    cb(_localLoad());
-  });
+  cb(_localLoad());
 }
 
 function saveAll(data, onDone){
   _localSave(data);
-  if(!isConfigured()){
-    if(onDone) onDone(false); return;
-  }
-  fetch('https://api.jsonbin.io/v3/b/' + JSONBIN_BIN_ID, {
-    method: 'PUT',
-    headers: {
-      'Content-Type': 'application/json',
-      'X-Master-Key': JSONBIN_API_KEY
-    },
-    body: JSON.stringify(data)
-  })
-  .then(function(r){
-    if(!r.ok) throw new Error('HTTP ' + r.status);
-    _cloudWorking = true;
-    if(onDone) onDone(true);
-  })
-  .catch(function(err){
-    console.warn('JSONBin save failed:', err);
-    _cloudWorking = false;
-    if(onDone) onDone(false);
-  });
+  if(onDone) onDone(true);
 }
 
 function _localSave(data){
@@ -708,6 +662,54 @@ function _localSave(data){
 }
 function _localLoad(){
   try{ return JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]'); }catch(e){ return []; }
+}
+
+// ── WhatsApp sharing ──────────────────────────────
+// Builds a readable text summary of one person's prediction and opens
+// WhatsApp (app on mobile, web.whatsapp.com on desktop) with it pre-filled.
+function formatPredText(entry){
+  var p = entry.pred;
+  var lines = [];
+  lines.push('🏅 *' + entry.name + '\'s ASSL Prediction* (' + entry.date + ')');
+  lines.push('');
+  ['classic','h2h','draft'].forEach(function(comp){
+    lines.push('*' + COMP_LABELS[comp] + '*');
+    (p[comp]||[]).forEach(function(name, idx){
+      lines.push((idx+1) + '. ' + name);
+    });
+    lines.push('');
+  });
+  lines.push('*Cup Bracket*');
+  var cup = p.cup;
+  if(cup && cup.fin && cup.fin.winner){
+    cup.qf.forEach(function(qf,i){
+      if(qf.m1||qf.m2){
+        lines.push('QF'+(i+1)+': '+(qf.m1||'?')+' vs '+(qf.m2||'?')+(qf.winner?' → 🏆 '+qf.winner+' ('+(qf.s1||'?')+'–'+(qf.s2||'?')+')':''));
+      }
+    });
+    cup.sf.forEach(function(sf,i){
+      if(sf.winner) lines.push('SF'+(i+1)+' winner: '+sf.winner+' ('+(sf.s1||'?')+'–'+(sf.s2||'?')+')');
+    });
+    lines.push('🏆 Cup winner: ' + cup.fin.winner + ' (' + (cup.fin.s1||'?') + '–' + (cup.fin.s2||'?') + ')');
+  } else {
+    lines.push('Not completed');
+  }
+  lines.push('');
+  lines.push('⚽ All Stars Super League — predictor.html');
+  return lines.join('\n');
+}
+
+function shareToWhatsApp(name){
+  loadAll(function(all){
+    var entry = all.find(function(p){ return p.name === name; });
+    if(!entry){
+      alert('No saved prediction found for ' + name + ' yet — submit one first.');
+      return;
+    }
+    var text = formatPredText(entry);
+    var url = 'https://wa.me/?text=' + encodeURIComponent(text);
+    window.open(url, '_blank');
+  });
 }
 
 // ── Start predictor ──────────────────────────────
@@ -744,24 +746,15 @@ function submitPred(){
     var entry = {name:currentName, date:dateStr, pred:JSON.parse(JSON.stringify(pred))};
     if(idx >= 0) all[idx] = entry; else all.push(entry);
 
-    saveAll(all, function(cloudOk){
+    saveAll(all, function(){
       if(btn){ btn.textContent = '🏅 Submit my prediction'; btn.disabled = false; }
       showSc('sc-success');
       var msg = document.getElementById('success-storage-note');
       if(msg){
-        if(cloudOk){
-          msg.innerHTML = '✅ <strong>Saved to the cloud</strong> — your prediction is now visible to everyone in the group.';
-          msg.style.background = 'rgba(10,122,75,.08)';
-          msg.style.borderColor = 'rgba(10,122,75,.3)';
-          msg.style.color = '#0a7a4b';
-        } else {
-          // Cloud failed but prediction is still saved locally
-          // Show a minimal note rather than a scary warning
-          msg.innerHTML = '💾 <strong>Prediction saved.</strong> Cloud sync unavailable right now — your picks are stored on this device. Try refreshing the predictions board after a moment.';
-          msg.style.background = 'var(--bg-2)';
-          msg.style.borderColor = 'var(--rt)';
-          msg.style.color = 'var(--ink-3)';
-        }
+        msg.innerHTML = '💾 <strong>Saved on this device.</strong> Tap "Share to WhatsApp" below to send your picks to the group.';
+        msg.style.background = 'var(--bg-2)';
+        msg.style.borderColor = 'var(--rt)';
+        msg.style.color = 'var(--ink-3)';
       }
     });
   });
@@ -770,23 +763,10 @@ function submitPred(){
 // ── Board ─────────────────────────────────────────
 function showBoard(){
   showSc('sc-board');
-  var banner = document.getElementById('cloud-banner');
-  if(banner) banner.style.display = 'none'; // credentials configured, hide warning
   var wrap = document.getElementById('board-wrap');
   wrap.innerHTML = '<div class="empty"><div class="ei" style="font-size:36px;">⏳</div><p style="font-size:14px;margin-top:8px;">Loading predictions…</p></div>';
 
-  loadAll(function(cloudData){
-    // Always also check localStorage — merge so nothing is lost
-    var localData = _localLoad();
-    // Build a merged map: cloud takes priority, local fills gaps
-    var map = {};
-    localData.forEach(function(e){ map[e.name] = e; });
-    cloudData.forEach(function(e){ map[e.name] = e; }); // cloud overwrites local
-    var all = Object.keys(map).map(function(k){ return map[k]; });
-
-    // Re-save merged set locally so board always has latest
-    _localSave(all);
-
+  loadAll(function(all){
     wrap.innerHTML = '';
     var meta = document.createElement('div');
     meta.style.cssText = 'margin-bottom:16px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;';
@@ -836,9 +816,12 @@ function showBoard(){
       var card = document.createElement('div');
       card.className = 'bcard';
       card.innerHTML =
-        '<div class="bcard-hdr" onclick="toggleCard(this)">'+
-          '<div><div class="bcard-name serif">'+entry.name+'</div><div class="bcard-meta">Submitted '+entry.date+'</div></div>'+
-          '<div class="btog">+ expand</div>'+
+        '<div class="bcard-hdr">'+
+          '<div style="cursor:pointer;flex:1;" onclick="toggleCard(this.closest(\'.bcard-hdr\'))"><div class="bcard-name serif">'+entry.name+'</div><div class="bcard-meta">Submitted '+entry.date+'</div></div>'+
+          '<div style="display:flex;align-items:center;gap:10px;">'+
+            '<button class="card-share" onclick="event.stopPropagation();shareToWhatsApp(\''+entry.name.replace(/'/g,"\\'")+'\')">📤 Share</button>'+
+            '<div class="btog" onclick="toggleCard(this.closest(\'.bcard-hdr\'))" style="cursor:pointer;">+ expand</div>'+
+          '</div>'+
         '</div>'+
         '<div class="bcard-body">'+leagueSections+cupSection+'</div>';
       wrap.appendChild(card);
