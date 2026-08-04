@@ -653,15 +653,24 @@ function loadAll(cb){
 }
 
 function saveAll(data, onDone){
-  _localSave(data);
-  if(onDone) onDone(true);
+  var ok = _localSave(data);
+  if(onDone) onDone(ok);
 }
 
 function _localSave(data){
-  try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); }catch(e){}
+  try{
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    return true;
+  }catch(e){
+    console.warn('localStorage save failed:', e);
+    return false;
+  }
 }
 function _localLoad(){
-  try{ return JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]'); }catch(e){ return []; }
+  try{ return JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]'); }catch(e){
+    console.warn('localStorage load failed:', e);
+    return [];
+  }
 }
 
 // ── WhatsApp sharing ──────────────────────────────
@@ -746,15 +755,22 @@ function submitPred(){
     var entry = {name:currentName, date:dateStr, pred:JSON.parse(JSON.stringify(pred))};
     if(idx >= 0) all[idx] = entry; else all.push(entry);
 
-    saveAll(all, function(){
+    saveAll(all, function(ok){
       if(btn){ btn.textContent = '🏅 Submit my prediction'; btn.disabled = false; }
       showSc('sc-success');
       var msg = document.getElementById('success-storage-note');
       if(msg){
-        msg.innerHTML = '💾 <strong>Saved on this device.</strong> Tap "Share to WhatsApp" below to send your picks to the group.';
-        msg.style.background = 'var(--bg-2)';
-        msg.style.borderColor = 'var(--rt)';
-        msg.style.color = 'var(--ink-3)';
+        if(ok){
+          msg.innerHTML = '💾 <strong>Saved on this device.</strong> Tap "Share to WhatsApp" below to send your picks to the group.';
+          msg.style.background = 'var(--bg-2)';
+          msg.style.borderColor = 'var(--rt)';
+          msg.style.color = 'var(--ink-3)';
+        } else {
+          msg.innerHTML = '⚠️ <strong>Could not save.</strong> Your browser is blocking local storage for this site (common with strict privacy/cookie settings). Try allowing cookies/site data for this page, turn off private/secret browsing, or try a different browser — then submit again.';
+          msg.style.background = '#fdeceb';
+          msg.style.borderColor = 'rgba(176,48,32,.3)';
+          msg.style.color = 'var(--red)';
+        }
       }
     });
   });
