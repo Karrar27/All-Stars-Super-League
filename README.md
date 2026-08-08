@@ -1,2 +1,2 @@
 # All-Stars-Super-League
-The HQ and Mine of memes and entertainment. Legacy Industry
+This is our legacy. A small gift from me on behalf of all All Stars Super League FPL minileague participants, be part of our memories
